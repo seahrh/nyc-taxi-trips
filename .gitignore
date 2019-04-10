@@ -1,3 +1,7 @@
+project/project/
+project/target/
+tmp/
+dist/
 public/
 docs/
 logs/

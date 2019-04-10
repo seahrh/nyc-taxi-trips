@@ -10,6 +10,7 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 
     "render the index page" in {
       val request = FakeRequest(GET, "/").withHeaders(HOST -> "localhost:9000").withCSRFToken
+      @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
       val home = route(app, request).get
 
       contentAsString(home) must include ("This is a placeholder page to show you the REST API.")

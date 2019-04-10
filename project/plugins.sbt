@@ -10,3 +10,9 @@ addSbtPlugin("io.gatling" % "gatling-sbt" % "2.2.2")
 
 // Scala formatting: "sbt scalafmt"
 addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.15")
+
+// Lint
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.1")
+
+// check dependency updates
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.1")

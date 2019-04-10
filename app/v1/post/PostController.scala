@@ -9,7 +9,7 @@ import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class PostFormInput(title: String, body: String)
+final case class PostFormInput(title: String, body: String)
 
 /**
   * Takes HTTP requests and produces JSON.

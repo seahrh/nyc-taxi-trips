@@ -1,7 +1,6 @@
 package controllers
 
 import javax.inject.Inject
-
 import play.api.mvc._
 
 /**
@@ -10,7 +9,7 @@ import play.api.mvc._
 class HomeController @Inject()(cc: ControllerComponents)
     extends AbstractController(cc) {
 
-  def index = Action {
+  def index: Action[AnyContent] = Action {
     Ok(views.html.index())
   }
 }

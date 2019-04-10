@@ -32,6 +32,7 @@ trait RequestMarkerContext {
   private def marker(tuple: (String, Any)) = Markers.append(tuple._1, tuple._2)
 
   private implicit class RichLogstashMarker(marker1: LogstashMarker) {
+
     def &&(marker2: LogstashMarker): LogstashMarker = marker1.and(marker2)
   }
 
@@ -78,7 +79,7 @@ class PostActionBuilder @Inject()(messagesApi: MessagesApi,
       request.method match {
         case GET | HEAD =>
           result.withHeaders("Cache-Control" -> s"max-age: 100")
-        case other =>
+        case _ =>
           result
       }
     }
@@ -91,7 +92,7 @@ class PostActionBuilder @Inject()(messagesApi: MessagesApi,
   * This is a good way to minimize the surface area exposed to the controller, so the
   * controller only has to have one thing injected.
   */
-case class PostControllerComponents @Inject()(
+final case class PostControllerComponents @Inject()(
     postActionBuilder: PostActionBuilder,
     postResourceHandler: PostResourceHandler,
     actionBuilder: DefaultActionBuilder,

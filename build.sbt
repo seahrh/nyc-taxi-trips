@@ -31,6 +31,22 @@ lazy val root = (project in file("."))
     maintainer := "seahrh@gmail.com"
   )
 
+wartremoverErrors ++= Warts.allBut(
+  Wart.ToString,
+  Wart.Throw,
+  Wart.DefaultArguments,
+  Wart.ImplicitParameter,
+  Wart.NonUnitStatements,
+  Wart.Var,
+  Wart.Overloading,
+  Wart.MutableDataStructures,
+  Wart.Equals,
+  Wart.AsInstanceOf, // used in routes
+  Wart.Nothing, // used in routes
+  Wart.Product, // used in routes
+  Wart.Serializable // used in routes
+)
+
 // Documentation for this project:
 //    sbt "project docs" "~ paradox"
 //    open docs/target/paradox/site/index.html

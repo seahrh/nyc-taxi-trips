@@ -48,7 +48,7 @@ class RequestHandler @Inject()(webCommands: WebCommands,
       val path = origReq.path + "/"
       if (origReq.rawQueryString.isEmpty) {
         origReq.withTarget(
-          RequestTarget(path = path, uriString = path, queryString = Map())
+          RequestTarget(path = path, uriString = path, queryString = Map.empty[String, Seq[String]])
         )
       } else {
         origReq.withTarget(

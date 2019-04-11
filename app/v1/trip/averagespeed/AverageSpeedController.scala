@@ -2,19 +2,47 @@ package v1.trip.averagespeed
 
 import javax.inject.Inject
 import play.api.Logger
+import play.api.http.FileMimeTypes
+import play.api.i18n.{Langs, MessagesApi}
 import play.api.mvc._
+import v1.trip.{RequestMarkerContext, TripActionBuilder}
 import v1.{failurePayload, successPayload}
 
 import scala.concurrent.ExecutionContext
 
 /**
+  * Packages up the component dependencies for the post controller.
+  *
+  * This is a good way to minimize the surface area exposed to the controller, so the
+  * controller only has to have one thing injected.
+  */
+final case class AverageSpeedControllerComponents @Inject()(
+                                                             action: TripActionBuilder,
+                                                             resourceHandler: AverageSpeedResourceHandler,
+                                                             actionBuilder: DefaultActionBuilder,
+                                                             parsers: PlayBodyParsers,
+                                                             messagesApi: MessagesApi,
+                                                             langs: Langs,
+                                                             fileMimeTypes: FileMimeTypes,
+                                                             executionContext: scala.concurrent.ExecutionContext)
+  extends ControllerComponents
+
+
+/**
   * Takes HTTP requests and produces JSON.
   */
-class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponents)(
-    implicit ec: ExecutionContext)
-    extends AverageSpeedBaseController(cc) {
+final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponents)(
+  implicit ec: ExecutionContext)
+  extends BaseController
+    with RequestMarkerContext {
 
   private val logger = Logger(getClass)
+
+  override protected def controllerComponents: ControllerComponents = cc
+
+  private def action: TripActionBuilder = cc.action
+
+  private def resourceHandler: AverageSpeedResourceHandler = cc.resourceHandler
 
   def show(date: String): Action[AnyContent] = action.async {
     implicit request =>

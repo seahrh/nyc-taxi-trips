@@ -8,27 +8,16 @@ import play.api.{Logger, MarkerContext}
 
 import scala.concurrent.Future
 
-final case class AverageSpeedData(id: AverageSpeedId, title: String, body: String)
-
-class AverageSpeedId private(val underlying: Int) extends AnyVal {
-  override def toString: String = underlying.toString
-}
-
-object AverageSpeedId {
-  def apply(raw: String): AverageSpeedId = {
-    require(raw != null)
-    new AverageSpeedId(Integer.parseInt(raw))
-  }
-}
+final case class AverageSpeedData(date: String, averageSpeed: Float)
 
 class AverageSpeedExecutionContext @Inject()(actorSystem: ActorSystem)
-    extends CustomExecutionContext(actorSystem, "repository.dispatcher")
+  extends CustomExecutionContext(actorSystem, "repository.dispatcher")
 
 /**
   * A pure non-blocking interface for the PostRepository.
   */
 trait AverageSpeedRepository {
-  def get(id: AverageSpeedId)(implicit mc: MarkerContext): Future[Option[AverageSpeedData]]
+  def get(date: String)(implicit mc: MarkerContext): Future[Option[AverageSpeedData]]
 }
 
 /**
@@ -40,23 +29,23 @@ trait AverageSpeedRepository {
   */
 @Singleton
 class AverageSpeedRepositoryImpl @Inject()()(implicit ec: AverageSpeedExecutionContext)
-    extends AverageSpeedRepository {
+  extends AverageSpeedRepository {
 
   private val logger = Logger(this.getClass)
 
-  private val postList = List(
-    AverageSpeedData(AverageSpeedId("1"), "title 1", "blog post 1"),
-    AverageSpeedData(AverageSpeedId("2"), "title 2", "blog post 2"),
-    AverageSpeedData(AverageSpeedId("3"), "title 3", "blog post 3"),
-    AverageSpeedData(AverageSpeedId("4"), "title 4", "blog post 4"),
-    AverageSpeedData(AverageSpeedId("5"), "title 5", "blog post 5")
+  private val result: List[AverageSpeedData] = List(
+    AverageSpeedData("2019-04-01", 1.1F),
+    AverageSpeedData("2019-04-02", 2.2F),
+    AverageSpeedData("2019-04-03", 3.3F),
+    AverageSpeedData("2019-04-04", 4.4F),
+    AverageSpeedData("2019-04-05", 5.5F)
   )
 
-  override def get(id: AverageSpeedId)(
-      implicit mc: MarkerContext): Future[Option[AverageSpeedData]] = {
+  override def get(date: String)(
+    implicit mc: MarkerContext): Future[Option[AverageSpeedData]] = {
     Future {
-      logger.trace(s"get: id = $id")
-      postList.find(post => post.id == id)
+      logger.trace(s"get: date=$date")
+      result.find(x => x.date == date)
     }
   }
 

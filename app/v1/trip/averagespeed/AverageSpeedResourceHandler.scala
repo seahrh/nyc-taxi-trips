@@ -1,6 +1,6 @@
 package v1.trip.averagespeed
 
-import javax.inject.{Inject, Provider}
+import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
 
@@ -9,21 +9,17 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * DTO for displaying post information.
   */
-final case class AverageSpeedResource(id: String, title: String, body: String)
+final case class AverageSpeedResource(averageSpeed: Float)
 
 object AverageSpeedResource {
 
   /**
     * Mapping to write a PostResource out as a JSON value.
     */
-  implicit val implicitWrites: Writes[AverageSpeedResource] = new Writes[AverageSpeedResource] {
-    def writes(post: AverageSpeedResource): JsValue = {
-      Json.obj(
-        "id" -> post.id,
-        "title" -> post.title,
-        "body" -> post.body
-      )
-    }
+  implicit val implicitWrites: Writes[AverageSpeedResource] = (res: AverageSpeedResource) => {
+    Json.obj(
+      "average_speed" -> res.averageSpeed
+    )
   }
 }
 
@@ -34,18 +30,16 @@ class AverageSpeedResourceHandler @Inject()(
                                              repo: AverageSpeedRepository
                                            )(implicit ec: ExecutionContext) {
 
-  def lookup(id: String)(
-      implicit mc: MarkerContext): Future[Option[AverageSpeedResource]] = {
-    val postFuture = repo.get(AverageSpeedId(id))
-    postFuture.map { maybePostData =>
-      maybePostData.map { postData =>
-        createResource(postData)
-      }
+  def lookup(date: String)(
+    implicit mc: MarkerContext): Future[Option[AverageSpeedResource]] = {
+    repo.get(date).map {
+      case Some(d) => Option(asResource(d))
+      case _ => None
     }
   }
 
-  private def createResource(p: AverageSpeedData): AverageSpeedResource = {
-    AverageSpeedResource(p.id.toString, p.title, p.body)
+  private def asResource(d: AverageSpeedData): AverageSpeedResource = {
+    AverageSpeedResource(d.averageSpeed)
   }
 
 }

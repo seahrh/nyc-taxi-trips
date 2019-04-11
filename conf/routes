@@ -1,4 +1,4 @@
-GET /average_speed_24hrs            v1.trip.averagespeed.AverageSpeedController.show(date:String)
+GET /average_speed_24hrs            v1.trip.averagespeed.AverageSpeedController.show(date)
 
 GET        /index                  controllers.HomeController.index
 

@@ -1,4 +1,6 @@
-GET        /                       controllers.HomeController.index
+GET /average_speed_24hrs            v1.trip.averagespeed.AverageSpeedController.show(date:String)
+
+GET        /index                  controllers.HomeController.index
 
 ->         /v1/posts               v1.post.PostRouter
 

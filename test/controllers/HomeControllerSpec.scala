@@ -9,7 +9,7 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest {
   "HomeController" should {
 
     "render the index page" in {
-      val request = FakeRequest(GET, "/").withHeaders(HOST -> "localhost:9000").withCSRFToken
+      val request = FakeRequest(GET, "/").withHeaders(HOST -> "localhost:8080").withCSRFToken
       @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
       val home = route(app, request).get
 

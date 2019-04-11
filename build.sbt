@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
   .enablePlugins(Common, PlayScala, GatlingPlugin)
   .configs(GatlingTest)
   .settings(inConfig(GatlingTest)(Defaults.testSettings): _*)
+  .settings(PlayKeys.playDefaultPort := 8080)
   .settings(
     name := """nyc-taxi-trips""",
     scalaSource in GatlingTest := baseDirectory.value / "/gatling/simulation",

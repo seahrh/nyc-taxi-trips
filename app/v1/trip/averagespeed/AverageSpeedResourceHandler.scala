@@ -12,18 +12,10 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * DTO for displaying post information.
   */
-final case class AverageSpeedResource(averageSpeed: Float)
+final case class AverageSpeedResource(average_speed: Float)
 
 object AverageSpeedResource {
-
-  /**
-    * Mapping to write a PostResource out as a JSON value.
-    */
-  implicit val implicitWrites: Writes[AverageSpeedResource] = (res: AverageSpeedResource) => {
-    Json.obj(
-      "average_speed" -> res.averageSpeed
-    )
-  }
+  implicit val jsonFormat: Format[AverageSpeedResource] = Json.format[AverageSpeedResource]
 }
 
 /**

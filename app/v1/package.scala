@@ -1,4 +1,4 @@
-import play.api.libs.json.{JsObject, Json, Writes}
+import play.api.libs.json.{Format, JsValue, Json, Writes}
 
 
 package object v1 {
@@ -6,23 +6,27 @@ package object v1 {
   final case class Error(message: String)
 
   object Error {
-
-    /**
-      * Mapping to write a PostResource out as a JSON value.
-      */
-    implicit val implicitWrites: Writes[Error] = (e: Error) => {
-      Json.obj(
-        "message" -> e.message
-      )
-    }
+    implicit val jsonFormat: Format[Error] = Json.format[Error]
   }
 
-  private[v1] def successPayload[T](data: Seq[T])(implicit tjs: Writes[T]): JsObject = {
-    Json.obj("data" -> Json.toJson(data))
+  final case class SuccessPayload(data: JsValue)
+
+  object SuccessPayload {
+    implicit val jsonFormat: Format[SuccessPayload] = Json.format[SuccessPayload]
   }
 
-  private[v1] def failurePayload(message: String): JsObject = {
-    Json.obj("error" -> Json.toJson(Error(message)))
+  private[v1] def successPayload[T](data: Seq[T])(implicit tjs: Writes[T]): JsValue = {
+    Json.toJson(SuccessPayload(data = Json.toJson(data)))
+  }
+
+  final case class FailurePayload(error: Error)
+
+  object FailurePayload {
+    implicit val jsonFormat: Format[FailurePayload] = Json.format[FailurePayload]
+  }
+
+  private[v1] def failurePayload(message: String): JsValue = {
+    Json.toJson(FailurePayload(error = Error(message)))
   }
 
 }

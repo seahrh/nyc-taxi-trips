@@ -1,8 +1,11 @@
 package v1.trip.averagespeed
 
+import java.time.format.DateTimeFormatter
+
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
+import validation.{DateValidator, ValidationError}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,6 +33,8 @@ class AverageSpeedResourceHandler @Inject()(
                                              repo: AverageSpeedRepository
                                            )(implicit ec: ExecutionContext) {
 
+  private val dateFormat = DateTimeFormatter.ISO_LOCAL_DATE
+
   def lookup(date: String)(
     implicit mc: MarkerContext): Future[Option[AverageSpeedResource]] = {
     repo.get(date).map {
@@ -40,6 +45,15 @@ class AverageSpeedResourceHandler @Inject()(
 
   private def asResource(d: AverageSpeedData): AverageSpeedResource = {
     AverageSpeedResource(d.averageSpeed)
+  }
+
+  def validate(date: String): Option[String] = {
+    val errors: Set[ValidationError] = DateValidator(date, dateFormat).validate
+    if (errors.isEmpty) {
+      None
+    } else {
+      Option(errors map { e => e.message } mkString ". ")
+    }
   }
 
 }

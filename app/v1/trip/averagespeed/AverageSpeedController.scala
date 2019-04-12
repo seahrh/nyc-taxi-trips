@@ -44,15 +44,20 @@ final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponent
 
   private def resourceHandler: AverageSpeedResourceHandler = cc.resourceHandler
 
-  def show(date: String): Action[AnyContent] = action.async {
-    implicit request =>
-      logger.trace(s"show: date = $date")
-      resourceHandler.lookup(date).map {
-        case Some(data) => Ok(successPayload[AverageSpeedResource](Seq(data)))
-        case _ =>
-          NotFound(failurePayload(s"Average speed not found for date: $date"))
-      }
+  def show(date: String): Action[AnyContent] = {
+    resourceHandler.validate(date) match {
+      case Some(err) => Action(BadRequest(failurePayload(err)))
+      case _ =>
+        action.async {
+          implicit request =>
+            logger.trace(s"show: date = $date")
+            resourceHandler.lookup(date).map {
+              case Some(data) => Ok(successPayload[AverageSpeedResource](Seq(data)))
+              case _ =>
+                NotFound(failurePayload(s"Average speed not found for date: $date"))
+            }
+        }
+    }
   }
-
 
 }

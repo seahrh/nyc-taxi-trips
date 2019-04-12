@@ -13,6 +13,7 @@ class TripAverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
   implicit lazy val materializer: Materializer = app.materializer
 
   "Trip Average Speed" should {
+
     "return 200 OK and resource when resource exists" in {
       val request = FakeRequest(GET, "/average_speed_24hrs?date=2019-04-01")
         .withHeaders(HOST -> "localhost:8080")
@@ -34,14 +35,6 @@ class TripAverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
       }
     }
 
-    "return 404 Not Found when path does not exist" in {
-      val request = FakeRequest(GET, "/bad_path")
-        .withHeaders(HOST -> "localhost:8080")
-      for (res <- route(app, request)) {
-        status(res) mustEqual NOT_FOUND
-      }
-    }
-
     "return 400 Bad Request and details when input value is invalid" in {
       val request = FakeRequest(GET, "/average_speed_24hrs?date=2019-02-31")
         .withHeaders(HOST -> "localhost:8080")
@@ -52,7 +45,7 @@ class TripAverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
       }
     }
 
-    "return 400 Bad Request when input key is invalid" in {
+    "return 400 Bad Request and details when input key is invalid" in {
       val request = FakeRequest(GET, "/average_speed_24hrs?name=2019-02-01")
         .withHeaders(HOST -> "localhost:8080")
       for (res <- route(app, request)) {

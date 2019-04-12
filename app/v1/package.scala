@@ -29,4 +29,8 @@ package object v1 {
     Json.toJson(FailurePayload(error = Error(message)))
   }
 
+  private[v1] def roundUp(d: Double, decimalPlaces: Int): Double = {
+    BigDecimal(d).setScale(decimalPlaces, BigDecimal.RoundingMode.HALF_UP).toDouble
+  }
+
 }

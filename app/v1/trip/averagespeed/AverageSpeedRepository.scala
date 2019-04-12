@@ -8,7 +8,7 @@ import play.api.{Logger, MarkerContext}
 
 import scala.concurrent.Future
 
-final case class AverageSpeedData(date: String, averageSpeed: Float)
+final case class AverageSpeedData(date: String, averageSpeed: Double)
 
 class AverageSpeedExecutionContext @Inject()(actorSystem: ActorSystem)
   extends CustomExecutionContext(actorSystem, "repository.dispatcher")

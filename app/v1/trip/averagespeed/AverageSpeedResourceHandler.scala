@@ -8,11 +8,12 @@ import play.api.libs.json._
 import validation.{DateValidator, ValidationError}
 
 import scala.concurrent.{ExecutionContext, Future}
+import v1.roundUp
 
 /**
   * DTO for displaying post information.
   */
-final case class AverageSpeedResource(average_speed: Float)
+final case class AverageSpeedResource(average_speed: Double)
 
 object AverageSpeedResource {
   implicit val jsonFormat: Format[AverageSpeedResource] = Json.format[AverageSpeedResource]
@@ -36,7 +37,7 @@ class AverageSpeedResourceHandler @Inject()(
   }
 
   private def asResource(d: AverageSpeedData): AverageSpeedResource = {
-    AverageSpeedResource(d.averageSpeed)
+    AverageSpeedResource(roundUp(d.averageSpeed, decimalPlaces = 1))
   }
 
   def validate(date: String): Option[String] = {

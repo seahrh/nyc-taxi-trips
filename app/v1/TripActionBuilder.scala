@@ -1,4 +1,4 @@
-package v1.trip
+package v1
 
 import javax.inject.Inject
 import net.logstash.logback.marker.LogstashMarker

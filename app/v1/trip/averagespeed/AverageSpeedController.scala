@@ -5,8 +5,7 @@ import play.api.Logger
 import play.api.http.FileMimeTypes
 import play.api.i18n.{Langs, MessagesApi}
 import play.api.mvc._
-import v1.trip.{RequestMarkerContext, TripActionBuilder}
-import v1.{failurePayload, successPayload}
+import v1.{RequestMarkerContext, TripActionBuilder, failurePayload, successPayload}
 
 import scala.concurrent.ExecutionContext
 

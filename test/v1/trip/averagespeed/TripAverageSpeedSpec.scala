@@ -1,4 +1,4 @@
-package v1.trip
+package v1.trip.averagespeed
 
 import akka.stream.Materializer
 import org.scalatestplus.play.PlaySpec
@@ -6,7 +6,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.Helpers._
 import play.api.test._
 import v1._
-import v1.trip.averagespeed.AverageSpeedResource
 
 class TripAverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
 
@@ -20,7 +19,7 @@ class TripAverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
       for (res <- route(app, request)) {
         status(res) mustEqual OK
         val payload: SuccessPayload = contentAsJson(res).as[SuccessPayload]
-        val data: Seq[AverageSpeedResource] = payload.data.as[Seq[AverageSpeedResource]]
+        val data: Seq[Resource] = payload.data.as[Seq[Resource]]
         data.isEmpty mustEqual false
       }
     }

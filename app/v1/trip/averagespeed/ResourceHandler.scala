@@ -14,7 +14,7 @@ import v1.roundUp
 /**
   * DTO for displaying post information.
   */
-private[averagespeed] final case class Resource(average_speed: Double)
+private[averagespeed] final case class Resource(average_speed: Float)
 
 private[averagespeed] object Resource {
   implicit val jsonFormat: Format[Resource] = Json.format[Resource]

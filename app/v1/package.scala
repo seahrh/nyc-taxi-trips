@@ -33,4 +33,8 @@ package object v1 {
     BigDecimal(d).setScale(decimalPlaces, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 
+  private[v1] def roundUp(f: Float, decimalPlaces: Int): Float = {
+    roundUp(f.toDouble, decimalPlaces).toFloat
+  }
+
 }

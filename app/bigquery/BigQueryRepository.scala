@@ -8,7 +8,7 @@ import play.api.{Logger, MarkerContext}
 
 import scala.concurrent.Future
 
-final case class AverageSpeed(date: String, averageSpeed: Double)
+final case class AverageSpeed(date: String, averageSpeed: Float)
 
 final case class AverageFareByPickupLocation(date: String, s2id: String, fare: Float)
 
@@ -17,7 +17,7 @@ final case class TripCount(date: String, count: Long)
 /**
   * A pure non-blocking interface for the PostRepository.
   */
-trait BigQueryRepository {
+sealed trait BigQueryRepository {
   def avgSpeed(date: String)
               (implicit mc: MarkerContext): Future[Option[AverageSpeed]]
 
@@ -36,17 +36,17 @@ trait BigQueryRepository {
   * such as rendering.
   */
 @Singleton
-class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionContext)
+final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionContext)
   extends BigQueryRepository {
 
   private val logger = Logger(this.getClass)
 
   private val result: List[AverageSpeed] = List(
-    AverageSpeed("2019-04-01", 1.1),
-    AverageSpeed("2019-04-02", 2.2),
-    AverageSpeed("2019-04-03", 3.3),
-    AverageSpeed("2019-04-04", 4.4),
-    AverageSpeed("2019-04-05", 5.5)
+    AverageSpeed("2019-04-01", 1.1F),
+    AverageSpeed("2019-04-02", 2.2F),
+    AverageSpeed("2019-04-03", 3.3F),
+    AverageSpeed("2019-04-04", 4.4F),
+    AverageSpeed("2019-04-05", 5.5F)
   )
 
   override def avgSpeed(date: String)(

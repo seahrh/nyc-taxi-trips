@@ -2,6 +2,7 @@ package v1.trip.averagespeed
 
 import java.time.format.DateTimeFormatter
 
+import bigquery.{AverageSpeed, BigQueryRepository}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
@@ -23,7 +24,7 @@ private[averagespeed] object Resource {
   * Controls access to the backend data, returning [[Resource]]
   */
 private[averagespeed] class ResourceHandler @Inject()(
-                                                       repo: AverageSpeedRepository
+                                                       repo: BigQueryRepository
                                                      )(implicit ec: ExecutionContext) {
 
   private val dateFormat = DateTimeFormatter.ISO_LOCAL_DATE
@@ -36,7 +37,7 @@ private[averagespeed] class ResourceHandler @Inject()(
     }
   }
 
-  private def asResource(d: AverageSpeedData): Resource = {
+  private def asResource(d: AverageSpeed): Resource = {
     Resource(roundUp(d.averageSpeed, decimalPlaces = 1))
   }
 

@@ -1,17 +1,31 @@
 package bigquery
 
+import java.time.LocalDate
+
 import javax.inject.{Inject, Singleton}
 import play.api.{Logger, MarkerContext}
+
 
 import scala.concurrent.Future
 
 final case class AverageSpeed(date: String, averageSpeed: Double)
 
+final case class AverageFareByPickupLocation(date: String, s2id: String, fare: Float)
+
+final case class TripCount(date: String, count: Long)
+
 /**
   * A pure non-blocking interface for the PostRepository.
   */
 trait BigQueryRepository {
-  def get(date: String)(implicit mc: MarkerContext): Future[Option[AverageSpeed]]
+  def avgSpeed(date: String)
+              (implicit mc: MarkerContext): Future[Option[AverageSpeed]]
+
+  def avgFareByPickupLocation(date: LocalDate)
+                             (implicit mc: MarkerContext): Future[Option[Seq[AverageFareByPickupLocation]]]
+
+  def tripCount(from: LocalDate, to: LocalDate)
+               (implicit mc: MarkerContext): Future[Option[Seq[TripCount]]]
 }
 
 /**
@@ -35,12 +49,21 @@ class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionContext
     AverageSpeed("2019-04-05", 5.5)
   )
 
-  override def get(date: String)(
+  override def avgSpeed(date: String)(
     implicit mc: MarkerContext): Future[Option[AverageSpeed]] = {
     Future {
-      logger.trace(s"get: date=$date")
+      logger.trace(s"averageSpeed: date=$date")
       result.find(x => x.date == date)
     }
   }
 
+  override def avgFareByPickupLocation(date: LocalDate)
+                                      (implicit mc: MarkerContext): Future[Option[Seq[AverageFareByPickupLocation]]] = {
+    throw new NotImplementedError
+  }
+
+  override def tripCount(from: LocalDate, to: LocalDate)
+                        (implicit mc: MarkerContext): Future[Option[Seq[TripCount]]] = {
+    throw new NotImplementedError
+  }
 }

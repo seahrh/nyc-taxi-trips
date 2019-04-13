@@ -67,7 +67,7 @@ class PostRepositoryImpl @Inject()()(implicit ec: PostExecutionContext)
   override def get(id: PostId)(
       implicit mc: MarkerContext): Future[Option[PostData]] = {
     Future {
-      logger.trace(s"get: id = $id")
+      logger.trace(s"averageSpeed: id = $id")
       postList.find(post => post.id == id)
     }
   }

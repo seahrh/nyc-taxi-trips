@@ -31,7 +31,7 @@ private[averagespeed] class ResourceHandler @Inject()(
 
   private[averagespeed] def lookup(date: String)(
     implicit mc: MarkerContext): Future[Option[Resource]] = {
-    repo.get(date).map {
+    repo.avgSpeed(date).map {
       case Some(d) => Option(asResource(d))
       case _ => None
     }

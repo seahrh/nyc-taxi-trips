@@ -15,15 +15,15 @@ import scala.concurrent.ExecutionContext
   * This is a good way to minimize the surface area exposed to the controller, so the
   * controller only has to have one thing injected.
   */
-final case class AverageSpeedControllerComponents @Inject()(
-                                                             action: V1ActionBuilder,
-                                                             resourceHandler: AverageSpeedResourceHandler,
-                                                             actionBuilder: DefaultActionBuilder,
-                                                             parsers: PlayBodyParsers,
-                                                             messagesApi: MessagesApi,
-                                                             langs: Langs,
-                                                             fileMimeTypes: FileMimeTypes,
-                                                             executionContext: scala.concurrent.ExecutionContext)
+private final case class AverageSpeedControllerComponents @Inject()(
+                                                                     action: V1ActionBuilder,
+                                                                     resourceHandler: ResourceHandler,
+                                                                     actionBuilder: DefaultActionBuilder,
+                                                                     parsers: PlayBodyParsers,
+                                                                     messagesApi: MessagesApi,
+                                                                     langs: Langs,
+                                                                     fileMimeTypes: FileMimeTypes,
+                                                                     executionContext: scala.concurrent.ExecutionContext)
   extends ControllerComponents
 
 
@@ -41,7 +41,7 @@ final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponent
 
   private def action: V1ActionBuilder = cc.action
 
-  private def resourceHandler: AverageSpeedResourceHandler = cc.resourceHandler
+  private def resourceHandler: ResourceHandler = cc.resourceHandler
 
   def show(date: String): Action[AnyContent] = {
     resourceHandler.validate(date) match {
@@ -51,7 +51,7 @@ final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponent
           implicit request =>
             logger.trace(s"show: date = $date")
             resourceHandler.lookup(date).map {
-              case Some(data) => Ok(successPayload[AverageSpeedResource](Seq(data)))
+              case Some(data) => Ok(successPayload[Resource](Seq(data)))
               case _ =>
                 NotFound(failurePayload(s"Average speed not found for date: $date"))
             }

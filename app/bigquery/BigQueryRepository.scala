@@ -22,10 +22,10 @@ sealed trait BigQueryRepository {
               (implicit mc: MarkerContext): Future[Option[AverageSpeed]]
 
   def avgFareByPickupLocation(date: LocalDate)
-                             (implicit mc: MarkerContext): Future[Option[Seq[AverageFareByPickupLocation]]]
+                             (implicit mc: MarkerContext): Future[Seq[AverageFareByPickupLocation]]
 
   def tripCount(from: LocalDate, to: LocalDate)
-               (implicit mc: MarkerContext): Future[Option[Seq[TripCount]]]
+               (implicit mc: MarkerContext): Future[Seq[TripCount]]
 }
 
 /**
@@ -41,29 +41,48 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
 
   private val logger = Logger(this.getClass)
 
-  private val result: List[AverageSpeed] = List(
-    AverageSpeed("2019-04-01", 1.1F),
-    AverageSpeed("2019-04-02", 2.2F),
-    AverageSpeed("2019-04-03", 3.3F),
-    AverageSpeed("2019-04-04", 4.4F),
-    AverageSpeed("2019-04-05", 5.5F)
-  )
-
   override def avgSpeed(date: String)(
     implicit mc: MarkerContext): Future[Option[AverageSpeed]] = {
     Future {
-      logger.trace(s"averageSpeed: date=$date")
+      logger.trace(s"avgSpeed: date=$date")
+      val result: Seq[AverageSpeed] = Seq(
+        AverageSpeed("2019-04-01", 1.1F),
+        AverageSpeed("2019-04-02", 2.2F),
+        AverageSpeed("2019-04-03", 3.3F),
+        AverageSpeed("2019-04-04", 4.4F),
+        AverageSpeed("2019-04-05", 5.5F)
+      )
       result.find(x => x.date == date)
     }
   }
 
   override def avgFareByPickupLocation(date: LocalDate)
-                                      (implicit mc: MarkerContext): Future[Option[Seq[AverageFareByPickupLocation]]] = {
-    throw new NotImplementedError
+                                      (implicit mc: MarkerContext): Future[Seq[AverageFareByPickupLocation]] = {
+    Future {
+      logger.trace(s"avgFareByPickupLocation: date=$date")
+      val result: Seq[AverageFareByPickupLocation] = Seq(
+        AverageFareByPickupLocation("2019-04-01", "s21", 1.11F),
+        AverageFareByPickupLocation("2019-04-01", "s22", 2.22F),
+        AverageFareByPickupLocation("2019-04-01", "s23", 3.33F),
+        AverageFareByPickupLocation("2019-04-01", "s24", 4.44F),
+        AverageFareByPickupLocation("2019-04-01", "s25", 5.55F)
+      )
+      result
+    }
   }
 
   override def tripCount(from: LocalDate, to: LocalDate)
-                        (implicit mc: MarkerContext): Future[Option[Seq[TripCount]]] = {
-    throw new NotImplementedError
+                        (implicit mc: MarkerContext): Future[Seq[TripCount]] = {
+    Future {
+      logger.trace(s"tripCount: from=$from, to=$to")
+      val result: Seq[TripCount] = Seq(
+        TripCount("2019-04-01", 111), //scalastyle:ignore
+        TripCount("2019-04-02", 222), //scalastyle:ignore
+        TripCount("2019-04-03", 333), //scalastyle:ignore
+        TripCount("2019-04-04", 444), //scalastyle:ignore
+        TripCount("2019-04-05", 555) //scalastyle:ignore
+      )
+      result
+    }
   }
 }

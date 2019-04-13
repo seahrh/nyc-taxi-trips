@@ -15,17 +15,16 @@ import scala.concurrent.{ExecutionContext, Future}
   * This is commonly used to hold request-specific information like
   * security credentials, and useful shortcut methods.
   */
-trait TripRequestHeader
-    extends MessagesRequestHeader
-    with PreferredMessagesProvider
-class TripRequest[A](request: Request[A], val messagesApi: MessagesApi)
+private[v1] trait V1RequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
+
+private[v1] class V1Request[A](request: Request[A], val messagesApi: MessagesApi)
     extends WrappedRequest(request)
-    with TripRequestHeader
+    with V1RequestHeader
 
 /**
   * Provides an implicit marker that will show the request in all logger statements.
   */
-trait RequestMarkerContext {
+private[v1] trait RequestMarkerContext {
   import net.logstash.logback.marker.Markers
 
   private def marker(tuple: (String, Any)) = Markers.append(tuple._1, tuple._2)
@@ -52,16 +51,16 @@ trait RequestMarkerContext {
   * the request with contextual data, and manipulate the
   * result.
   */
-class TripActionBuilder @Inject()(messagesApi: MessagesApi,
-                                  playBodyParsers: PlayBodyParsers)(
+private[v1] class V1ActionBuilder @Inject()(messagesApi: MessagesApi,
+                                playBodyParsers: PlayBodyParsers)(
     implicit val executionContext: ExecutionContext)
-    extends ActionBuilder[TripRequest, AnyContent]
+    extends ActionBuilder[V1Request, AnyContent]
     with RequestMarkerContext
     with HttpVerbs {
 
   override val parser: BodyParser[AnyContent] = playBodyParsers.anyContent
 
-  type RequestBlock[A] = TripRequest[A] => Future[Result]
+  type RequestBlock[A] = V1Request[A] => Future[Result]
 
   private val logger = Logger(this.getClass)
 
@@ -72,7 +71,7 @@ class TripActionBuilder @Inject()(messagesApi: MessagesApi,
       request)
     logger.trace(s"invokeBlock: ")
 
-    val future = block(new TripRequest(request, messagesApi))
+    val future = block(new V1Request(request, messagesApi))
 
     future.map { result =>
       request.method match {

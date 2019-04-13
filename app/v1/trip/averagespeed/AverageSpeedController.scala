@@ -5,7 +5,7 @@ import play.api.Logger
 import play.api.http.FileMimeTypes
 import play.api.i18n.{Langs, MessagesApi}
 import play.api.mvc._
-import v1.{RequestMarkerContext, TripActionBuilder, failurePayload, successPayload}
+import v1.{RequestMarkerContext, V1ActionBuilder, failurePayload, successPayload}
 
 import scala.concurrent.ExecutionContext
 
@@ -16,7 +16,7 @@ import scala.concurrent.ExecutionContext
   * controller only has to have one thing injected.
   */
 final case class AverageSpeedControllerComponents @Inject()(
-                                                             action: TripActionBuilder,
+                                                             action: V1ActionBuilder,
                                                              resourceHandler: AverageSpeedResourceHandler,
                                                              actionBuilder: DefaultActionBuilder,
                                                              parsers: PlayBodyParsers,
@@ -39,7 +39,7 @@ final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponent
 
   override protected def controllerComponents: ControllerComponents = cc
 
-  private def action: TripActionBuilder = cc.action
+  private def action: V1ActionBuilder = cc.action
 
   private def resourceHandler: AverageSpeedResourceHandler = cc.resourceHandler
 

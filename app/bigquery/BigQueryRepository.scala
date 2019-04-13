@@ -1,10 +1,10 @@
 package bigquery
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 import javax.inject.{Inject, Singleton}
 import play.api.{Logger, MarkerContext}
-
 
 import scala.concurrent.Future
 
@@ -18,7 +18,9 @@ final case class TripCount(date: String, count: Long)
   * A pure non-blocking interface for the PostRepository.
   */
 sealed trait BigQueryRepository {
-  def avgSpeed(date: String)
+  val dateFormat: DateTimeFormatter
+
+  def avgSpeed(date: LocalDate)
               (implicit mc: MarkerContext): Future[Option[AverageSpeed]]
 
   def avgFareByPickupLocation(date: LocalDate)
@@ -41,10 +43,13 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
 
   private val logger = Logger(this.getClass)
 
-  override def avgSpeed(date: String)(
+  override val dateFormat: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+  override def avgSpeed(date: LocalDate)(
     implicit mc: MarkerContext): Future[Option[AverageSpeed]] = {
     Future {
       logger.trace(s"avgSpeed: date=$date")
+      val ds: String = date.format(dateFormat)
       val result: Seq[AverageSpeed] = Seq(
         AverageSpeed("2019-04-01", 1.1F),
         AverageSpeed("2019-04-02", 2.2F),
@@ -52,7 +57,7 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
         AverageSpeed("2019-04-04", 4.4F),
         AverageSpeed("2019-04-05", 5.5F)
       )
-      result.find(x => x.date == date)
+      result.find(x => x.date == ds)
     }
   }
 

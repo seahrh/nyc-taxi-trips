@@ -1,15 +1,15 @@
 package v1.trip.averagespeed
 
-import java.time.format.DateTimeFormatter
+import java.time.LocalDate
 
 import bigquery.{AverageSpeed, BigQueryRepository}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
+import v1.roundUp
 import validation.{DateValidator, ValidationError}
 
 import scala.concurrent.{ExecutionContext, Future}
-import v1.roundUp
 
 /**
   * DTO for displaying post information.
@@ -27,22 +27,23 @@ private[averagespeed] class ResourceHandler @Inject()(
                                                        repo: BigQueryRepository
                                                      )(implicit ec: ExecutionContext) {
 
-  private val dateFormat = DateTimeFormatter.ISO_LOCAL_DATE
 
-  private[averagespeed] def lookup(date: String)(
-    implicit mc: MarkerContext): Future[Option[Resource]] = {
-    repo.avgSpeed(date).map {
-      case Some(d) => Option(asResource(d))
+
+  private[averagespeed] def lookup(date: String)
+                                  (implicit mc: MarkerContext): Future[Option[Resource]] = {
+    val d: LocalDate = LocalDate.parse(date, repo.dateFormat)
+    repo.avgSpeed(d).map {
+      case Some(data) => Option(asResource(data))
       case _ => None
     }
   }
 
-  private def asResource(d: AverageSpeed): Resource = {
-    Resource(roundUp(d.averageSpeed, decimalPlaces = 1))
+  private def asResource(data: AverageSpeed): Resource = {
+    Resource(roundUp(data.averageSpeed, decimalPlaces = 1))
   }
 
   private[averagespeed] def validate(date: String): Option[String] = {
-    val errors: Set[ValidationError] = DateValidator(date, dateFormat).validate
+    val errors: Set[ValidationError] = DateValidator(date, repo.dateFormat).validate
     if (errors.isEmpty) {
       None
     } else {

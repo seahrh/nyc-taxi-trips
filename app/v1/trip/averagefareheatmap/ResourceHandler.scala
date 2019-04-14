@@ -2,7 +2,7 @@ package v1.trip.averagefareheatmap
 
 import java.time.LocalDate
 
-import bigquery.{AverageFareByPickupLocation, BigQueryRepository}
+import dal.{AverageFareByPickupLocation, BigQueryRepository}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._

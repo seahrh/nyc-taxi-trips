@@ -3,7 +3,7 @@ package v1.trip.averagefareheatmap
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import bigquery.{AverageFareByPickupLocation, BigQueryRepository, BigQueryRepositoryImpl}
+import dal.{AverageFareByPickupLocation, BigQueryRepository, BigQueryRepositoryImpl}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar

@@ -2,7 +2,7 @@ package v1.trip.tripcount
 
 import java.time.LocalDate
 
-import bigquery.{BigQueryRepository, TripCount}
+import dal.{BigQueryRepository, TripCount}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._

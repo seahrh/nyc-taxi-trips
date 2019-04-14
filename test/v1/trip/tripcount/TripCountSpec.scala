@@ -3,7 +3,7 @@ package v1.trip.tripcount
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import bigquery.{BigQueryRepository, BigQueryRepositoryImpl, TripCount}
+import dal.{BigQueryRepository, BigQueryRepositoryImpl, TripCount}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar

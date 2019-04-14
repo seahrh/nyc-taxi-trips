@@ -2,7 +2,7 @@ package v1.trip.averagespeed
 
 import java.time.LocalDate
 
-import bigquery.{AverageSpeed, BigQueryRepository}
+import dal.{AverageSpeed, BigQueryRepository}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._

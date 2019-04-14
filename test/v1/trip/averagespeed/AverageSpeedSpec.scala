@@ -3,7 +3,7 @@ package v1.trip.averagespeed
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import bigquery.{AverageSpeed, BigQueryRepository, BigQueryRepositoryImpl}
+import dal.{AverageSpeed, BigQueryRepository, BigQueryRepositoryImpl}
 import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers._
 import org.scalatest.mockito.MockitoSugar

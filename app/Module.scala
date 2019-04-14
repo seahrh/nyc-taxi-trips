@@ -1,4 +1,4 @@
-import bigquery.{BigQueryRepository, BigQueryRepositoryImpl}
+import dal.{BigQueryRepository, BigQueryRepositoryImpl}
 import com.google.inject.AbstractModule
 import javax.inject._
 import net.codingwell.scalaguice.ScalaModule

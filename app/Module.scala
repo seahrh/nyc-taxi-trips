@@ -3,7 +3,6 @@ import com.google.inject.AbstractModule
 import javax.inject._
 import net.codingwell.scalaguice.ScalaModule
 import play.api.{Configuration, Environment}
-import v1.post._
 
 /**
   * Sets up custom components for Play.
@@ -15,7 +14,6 @@ class Module(environment: Environment, configuration: Configuration)
     with ScalaModule {
 
   override def configure(): Unit = {
-    bind[PostRepository].to[PostRepositoryImpl].in[Singleton]
     bind[BigQueryRepository].to[BigQueryRepositoryImpl].in[Singleton]
   }
 }

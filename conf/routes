@@ -4,8 +4,6 @@ GET /average_fare_heatmap               v1.trip.averagefareheatmap.AverageFareHe
 
 GET /average_speed_24hrs                v1.trip.averagespeed.AverageSpeedController.show(date)
 
-->         /v1/posts               v1.post.PostRouter
-
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.at(path="/public", file)
 

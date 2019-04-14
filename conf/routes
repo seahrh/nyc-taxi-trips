@@ -1,4 +1,6 @@
-GET /average_speed_24hrs            v1.trip.averagespeed.AverageSpeedController.show(date)
+GET /average_fare_heatmap               v1.trip.averagefareheatmap.AverageFareHeatmapController.show(date)
+
+GET /average_speed_24hrs                v1.trip.averagespeed.AverageSpeedController.show(date)
 
 ->         /v1/posts               v1.post.PostRouter
 

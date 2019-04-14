@@ -65,14 +65,15 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
                                       (implicit mc: MarkerContext): Future[Seq[AverageFareByPickupLocation]] = {
     Future {
       logger.trace(s"avgFareByPickupLocation: date=$date")
+      val ds: String = date.format(dateFormat)
       val result: Seq[AverageFareByPickupLocation] = Seq(
         AverageFareByPickupLocation("2019-04-01", "s21", 1.11F),
         AverageFareByPickupLocation("2019-04-01", "s22", 2.22F),
         AverageFareByPickupLocation("2019-04-01", "s23", 3.33F),
-        AverageFareByPickupLocation("2019-04-01", "s24", 4.44F),
-        AverageFareByPickupLocation("2019-04-01", "s25", 5.55F)
+        AverageFareByPickupLocation("2019-04-02", "s24", 4.44F),
+        AverageFareByPickupLocation("2019-04-02", "s25", 5.55F)
       )
-      result
+      result.filter(x => x.date == ds)
     }
   }
 

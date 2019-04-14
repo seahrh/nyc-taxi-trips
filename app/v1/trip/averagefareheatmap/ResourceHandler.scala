@@ -2,7 +2,7 @@ package v1.trip.averagefareheatmap
 
 import java.time.LocalDate
 
-import dal.{AverageFareByPickupLocation, BigQueryRepository}
+import dal.{AverageFareByPickupLocation, TripRepository}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
@@ -25,7 +25,7 @@ private[averagefareheatmap] object Resource {
   * Controls access to the backend data, returning [[Resource]]
   */
 private[averagefareheatmap] class ResourceHandler @Inject()(
-                                                       repo: BigQueryRepository
+                                                       repo: TripRepository
                                                      )(implicit ec: ExecutionContext) {
 
   private val S2_CELL_LEVEL: Int = 16

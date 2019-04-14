@@ -1,4 +1,4 @@
-import dal.{BigQueryRepository, BigQueryRepositoryImpl}
+import dal.{TripRepository, BigQueryTripRepository}
 import com.google.inject.AbstractModule
 import javax.inject._
 import net.codingwell.scalaguice.ScalaModule
@@ -14,6 +14,6 @@ class Module(environment: Environment, configuration: Configuration)
     with ScalaModule {
 
   override def configure(): Unit = {
-    bind[BigQueryRepository].to[BigQueryRepositoryImpl].in[Singleton]
+    bind[TripRepository].to[BigQueryTripRepository].in[Singleton]
   }
 }

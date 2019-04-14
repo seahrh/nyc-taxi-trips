@@ -2,7 +2,7 @@ package v1.trip.averagespeed
 
 import java.time.LocalDate
 
-import dal.{AverageSpeed, BigQueryRepository}
+import dal.{AverageSpeed, TripRepository}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
@@ -24,7 +24,7 @@ private[averagespeed] object Resource {
   * Controls access to the backend data, returning [[Resource]]
   */
 private[averagespeed] class ResourceHandler @Inject()(
-                                                       repo: BigQueryRepository
+                                                       repo: TripRepository
                                                      )(implicit ec: ExecutionContext) {
 
 

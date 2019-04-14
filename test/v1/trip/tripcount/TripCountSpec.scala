@@ -3,7 +3,7 @@ package v1.trip.tripcount
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import dal.{BigQueryRepository, BigQueryRepositoryImpl, TripCount}
+import dal.{TripRepository, BigQueryTripRepository, TripCount}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -29,22 +29,22 @@ class TripCountSpec extends PlaySpec with MockitoSugar {
     TripCount("2019-04-05", 555) //scalastyle:ignore
   )
 
-  private val repo = mock[BigQueryRepositoryImpl]
+  private val repo = mock[BigQueryTripRepository]
   when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
   when(repo.tripCount(any[LocalDate], any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(result)
 
   private val app = new GuiceApplicationBuilder()
-    .overrides(bind[BigQueryRepository].toInstance(repo))
+    .overrides(bind[TripRepository].toInstance(repo))
     .build
 
-  private val repoNoData = mock[BigQueryRepositoryImpl]
+  private val repoNoData = mock[BigQueryTripRepository]
   when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
   when(repoNoData.tripCount(any[LocalDate], any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
     Seq.empty[TripCount]
   )
 
   private val appNoData = new GuiceApplicationBuilder()
-    .overrides(bind[BigQueryRepository].toInstance(repoNoData))
+    .overrides(bind[TripRepository].toInstance(repoNoData))
     .build
 
   "Total Trips" should {

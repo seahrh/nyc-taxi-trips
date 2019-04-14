@@ -2,7 +2,7 @@ package v1.trip.tripcount
 
 import java.time.LocalDate
 
-import dal.{BigQueryRepository, TripCount}
+import dal.{TripRepository, TripCount}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
@@ -23,7 +23,7 @@ private[tripcount] object Resource {
   * Controls access to the backend data, returning [[Resource]]
   */
 private[tripcount] class ResourceHandler @Inject()(
-                                                       repo: BigQueryRepository
+                                                       repo: TripRepository
                                                      )(implicit ec: ExecutionContext) {
 
 

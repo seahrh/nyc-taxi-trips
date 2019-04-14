@@ -8,28 +8,6 @@ import play.api.{Logger, MarkerContext}
 
 import scala.concurrent.Future
 
-final case class AverageSpeed(date: String, averageSpeed: Float)
-
-final case class AverageFareByPickupLocation(date: String, lat: Float, lng: Float, fare: Float)
-
-final case class TripCount(date: String, count: Long)
-
-/**
-  * A pure non-blocking interface for the PostRepository.
-  */
-trait BigQueryRepository {
-  val dateFormat: DateTimeFormatter
-
-  def avgSpeed(date: LocalDate)
-              (implicit mc: MarkerContext): Future[Option[AverageSpeed]]
-
-  def avgFareByPickupLocation(date: LocalDate)
-                             (implicit mc: MarkerContext): Future[Seq[AverageFareByPickupLocation]]
-
-  def tripCount(from: LocalDate, to: LocalDate)
-               (implicit mc: MarkerContext): Future[Seq[TripCount]]
-}
-
 /**
   * A trivial implementation for the Post Repository.
   *
@@ -38,8 +16,8 @@ trait BigQueryRepository {
   * such as rendering.
   */
 @Singleton
-class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionContext)
-  extends BigQueryRepository {
+class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext)
+  extends TripRepository {
 
   private val logger = Logger(this.getClass)
 

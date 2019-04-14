@@ -3,7 +3,7 @@ package v1.trip.averagefareheatmap
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import dal.{AverageFareByPickupLocation, BigQueryRepository, BigQueryRepositoryImpl}
+import dal.{AverageFareByPickupLocation, TripRepository, BigQueryTripRepository}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -29,22 +29,22 @@ class AverageFareHeatmapSpec extends PlaySpec with MockitoSugar {
     AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 5.55F)
   )
 
-  private val repo = mock[BigQueryRepositoryImpl]
+  private val repo = mock[BigQueryTripRepository]
   when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
   when(repo.avgFareByPickupLocation(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(result)
 
   private val app = new GuiceApplicationBuilder()
-    .overrides(bind[BigQueryRepository].toInstance(repo))
+    .overrides(bind[TripRepository].toInstance(repo))
     .build
 
-  private val repoNoData = mock[BigQueryRepositoryImpl]
+  private val repoNoData = mock[BigQueryTripRepository]
   when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
   when(repoNoData.avgFareByPickupLocation(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
     Seq.empty[AverageFareByPickupLocation]
   )
 
   private val appNoData = new GuiceApplicationBuilder()
-    .overrides(bind[BigQueryRepository].toInstance(repoNoData))
+    .overrides(bind[TripRepository].toInstance(repoNoData))
     .build
 
   "Average Fare Heatmap" should {

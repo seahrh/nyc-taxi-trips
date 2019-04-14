@@ -3,7 +3,7 @@ package v1.trip.averagespeed
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import dal.{AverageSpeed, BigQueryRepository, BigQueryRepositoryImpl}
+import dal.{AverageSpeed, TripRepository, BigQueryTripRepository}
 import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers._
 import org.scalatest.mockito.MockitoSugar
@@ -20,21 +20,21 @@ import scala.concurrent.Future
 class AverageSpeedSpec extends PlaySpec with MockitoSugar {
   private val baseUrl: String = "/average_speed_24hrs"
 
-  private val repo = mock[BigQueryRepositoryImpl]
+  private val repo = mock[BigQueryTripRepository]
   when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
   when(repo.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
     Option(AverageSpeed("2019-04-01", 1.1F)))
 
   private val app = new GuiceApplicationBuilder()
-    .overrides(bind[BigQueryRepository].toInstance(repo))
+    .overrides(bind[TripRepository].toInstance(repo))
     .build
 
-  private val repoNoData = mock[BigQueryRepositoryImpl]
+  private val repoNoData = mock[BigQueryTripRepository]
   when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
   when(repoNoData.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(None)
 
   private val appNoData = new GuiceApplicationBuilder()
-    .overrides(bind[BigQueryRepository].toInstance(repoNoData))
+    .overrides(bind[TripRepository].toInstance(repoNoData))
     .build
 
   "Average Speed" should {

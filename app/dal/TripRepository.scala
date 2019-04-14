@@ -3,8 +3,7 @@ package dal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import javax.inject.{Inject, Singleton}
-import play.api.{Logger, MarkerContext}
+import play.api.MarkerContext
 
 import scala.concurrent.Future
 

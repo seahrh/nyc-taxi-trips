@@ -10,6 +10,7 @@ import v1.roundUp
 import validation.{DateValidator, ValidationError}
 
 import scala.concurrent.{ExecutionContext, Future}
+import geom.s2id
 
 /**
   * DTO for displaying post information.
@@ -27,7 +28,7 @@ private[averagefareheatmap] class ResourceHandler @Inject()(
                                                        repo: BigQueryRepository
                                                      )(implicit ec: ExecutionContext) {
 
-
+  private val S2_CELL_LEVEL: Int = 16
 
   private[averagefareheatmap] def lookup(date: String)
                                   (implicit mc: MarkerContext): Future[Seq[Resource]] = {
@@ -39,7 +40,7 @@ private[averagefareheatmap] class ResourceHandler @Inject()(
 
   private def asResource(data: AverageFareByPickupLocation): Resource = {
     Resource(
-      s2id = data.s2id,
+      s2id = s2id(latitude = data.lat, longitude = data.lng, level = S2_CELL_LEVEL),
       fare = roundUp(data.fare, decimalPlaces = 2)
     )
   }

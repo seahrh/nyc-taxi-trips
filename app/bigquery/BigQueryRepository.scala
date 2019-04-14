@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 final case class AverageSpeed(date: String, averageSpeed: Float)
 
-final case class AverageFareByPickupLocation(date: String, s2id: String, fare: Float)
+final case class AverageFareByPickupLocation(date: String, lat: Float, lng: Float, fare: Float)
 
 final case class TripCount(date: String, count: Long)
 
@@ -67,11 +67,11 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
       logger.trace(s"avgFareByPickupLocation: date=$date")
       val ds: String = date.format(dateFormat)
       val result: Seq[AverageFareByPickupLocation] = Seq(
-        AverageFareByPickupLocation("2019-04-01", "s21", 1.11F),
-        AverageFareByPickupLocation("2019-04-01", "s22", 2.22F),
-        AverageFareByPickupLocation("2019-04-01", "s23", 3.33F),
-        AverageFareByPickupLocation("2019-04-02", "s24", 4.44F),
-        AverageFareByPickupLocation("2019-04-02", "s25", 5.55F)
+        AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 1.11F),
+        AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 2.22F),
+        AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 3.33F),
+        AverageFareByPickupLocation("2019-04-02", 1.276162F, 103.847333F, 4.44F),
+        AverageFareByPickupLocation("2019-04-02", 1.276162F, 103.847333F, 5.55F)
       )
       result.filter(x => x.date == ds)
     }

@@ -1,17 +1,51 @@
 package v1.trip.tripcount
 
-import akka.stream.Materializer
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import bigquery.{BigQueryRepository, BigQueryRepositoryImpl, TripCount}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.MarkerContext
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test._
 import v1._
 
-class TripCountSpec extends PlaySpec with GuiceOneAppPerSuite {
+import scala.concurrent.Future
 
-  implicit lazy val materializer: Materializer = app.materializer
+class TripCountSpec extends PlaySpec with MockitoSugar {
 
   private val baseUrl: String = "/total_trips"
+
+  private val result: Seq[TripCount] = Seq(
+    TripCount("2019-04-01", 111), //scalastyle:ignore
+    TripCount("2019-04-02", 222), //scalastyle:ignore
+    TripCount("2019-04-03", 333), //scalastyle:ignore
+    TripCount("2019-04-04", 444), //scalastyle:ignore
+    TripCount("2019-04-05", 555) //scalastyle:ignore
+  )
+
+  private val repo = mock[BigQueryRepositoryImpl]
+  when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repo.tripCount(any[LocalDate], any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(result)
+
+  private val app = new GuiceApplicationBuilder()
+    .overrides(bind[BigQueryRepository].toInstance(repo))
+    .build
+
+  private val repoNoData = mock[BigQueryRepositoryImpl]
+  when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repoNoData.tripCount(any[LocalDate], any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
+    Seq.empty[TripCount]
+  )
+
+  private val appNoData = new GuiceApplicationBuilder()
+    .overrides(bind[BigQueryRepository].toInstance(repoNoData))
+    .build
 
   "Total Trips" should {
 
@@ -29,7 +63,7 @@ class TripCountSpec extends PlaySpec with GuiceOneAppPerSuite {
     "return 404 Not Found and details when resource does not exist" in {
       val request = FakeRequest(GET, s"$baseUrl?start=2029-04-06&end=2029-04-07")
         .withHeaders(HOST -> "localhost:8080")
-      for (res <- route(app, request)) {
+      for (res <- route(appNoData, request)) {
         status(res) mustEqual NOT_FOUND
         val payload: FailurePayload = contentAsJson(res).as[FailurePayload]
         payload.error.message must startWith("Total trips not found")

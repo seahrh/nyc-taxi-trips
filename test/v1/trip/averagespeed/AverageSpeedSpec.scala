@@ -1,17 +1,41 @@
 package v1.trip.averagespeed
 
-import akka.stream.Materializer
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import bigquery.{AverageSpeed, BigQueryRepository, BigQueryRepositoryImpl}
+import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers._
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.MarkerContext
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test._
 import v1._
 
-class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
+import scala.concurrent.Future
 
-  implicit lazy val materializer: Materializer = app.materializer
-
+class AverageSpeedSpec extends PlaySpec with MockitoSugar {
   private val baseUrl: String = "/average_speed_24hrs"
+
+  private val repo = mock[BigQueryRepositoryImpl]
+  when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repo.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
+    Option(AverageSpeed("2019-04-01", 1.1F)))
+
+  private val app = new GuiceApplicationBuilder()
+    .overrides(bind[BigQueryRepository].toInstance(repo))
+    .build
+
+  private val repoNoData = mock[BigQueryRepositoryImpl]
+  when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repoNoData.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(None)
+
+  private val appNoData = new GuiceApplicationBuilder()
+    .overrides(bind[BigQueryRepository].toInstance(repoNoData))
+    .build
 
   "Average Speed" should {
 
@@ -29,7 +53,7 @@ class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
     "return 404 Not Found and details when resource does not exist" in {
       val request = FakeRequest(GET, s"$baseUrl?date=2019-04-06")
         .withHeaders(HOST -> "localhost:8080")
-      for (res <- route(app, request)) {
+      for (res <- route(appNoData, request)) {
         status(res) mustEqual NOT_FOUND
         val payload: FailurePayload = contentAsJson(res).as[FailurePayload]
         payload.error.message must startWith("Average speed not found")

@@ -28,7 +28,8 @@ lazy val root = (project in file("."))
       "io.sgr" % "s2-geometry-library-java" % "1.0.0",
       "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
       "io.gatling.highcharts" % "gatling-charts-highcharts" % versions.gatling % Test,
-      "io.gatling" % "gatling-test-framework" % versions.gatling % Test
+      "io.gatling" % "gatling-test-framework" % versions.gatling % Test,
+      "org.mockito" % "mockito-core" % "2.27.0" % Test
     ),
     maintainer := "seahrh@gmail.com"
   )

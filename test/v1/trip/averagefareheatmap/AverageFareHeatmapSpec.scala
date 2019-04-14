@@ -1,17 +1,51 @@
 package v1.trip.averagefareheatmap
 
-import akka.stream.Materializer
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import bigquery.{AverageFareByPickupLocation, BigQueryRepository, BigQueryRepositoryImpl}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.MarkerContext
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test._
 import v1._
 
-class AverageFareHeatmapSpec extends PlaySpec with GuiceOneAppPerSuite {
+import scala.concurrent.Future
 
-  implicit lazy val materializer: Materializer = app.materializer
+class AverageFareHeatmapSpec extends PlaySpec with MockitoSugar {
 
   private val baseUrl: String = "/average_fare_heatmap"
+
+  private val result: Seq[AverageFareByPickupLocation] = Seq(
+    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 1.11F),
+    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 2.22F),
+    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 3.33F),
+    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 4.44F),
+    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 5.55F)
+  )
+
+  private val repo = mock[BigQueryRepositoryImpl]
+  when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repo.avgFareByPickupLocation(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(result)
+
+  private val app = new GuiceApplicationBuilder()
+    .overrides(bind[BigQueryRepository].toInstance(repo))
+    .build
+
+  private val repoNoData = mock[BigQueryRepositoryImpl]
+  when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repoNoData.avgFareByPickupLocation(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
+    Seq.empty[AverageFareByPickupLocation]
+  )
+
+  private val appNoData = new GuiceApplicationBuilder()
+    .overrides(bind[BigQueryRepository].toInstance(repoNoData))
+    .build
 
   "Average Fare Heatmap" should {
 
@@ -29,7 +63,7 @@ class AverageFareHeatmapSpec extends PlaySpec with GuiceOneAppPerSuite {
     "return 404 Not Found and details when resource does not exist" in {
       val request = FakeRequest(GET, s"$baseUrl?date=2019-04-06")
         .withHeaders(HOST -> "localhost:8080")
-      for (res <- route(app, request)) {
+      for (res <- route(appNoData, request)) {
         status(res) mustEqual NOT_FOUND
         val payload: FailurePayload = contentAsJson(res).as[FailurePayload]
         payload.error.message must startWith("Average fare not found")

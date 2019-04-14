@@ -17,7 +17,7 @@ final case class TripCount(date: String, count: Long)
 /**
   * A pure non-blocking interface for the PostRepository.
   */
-sealed trait BigQueryRepository {
+trait BigQueryRepository {
   val dateFormat: DateTimeFormatter
 
   def avgSpeed(date: LocalDate)
@@ -38,7 +38,7 @@ sealed trait BigQueryRepository {
   * such as rendering.
   */
 @Singleton
-final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionContext)
+class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionContext)
   extends BigQueryRepository {
 
   private val logger = Logger(this.getClass)

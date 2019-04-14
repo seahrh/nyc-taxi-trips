@@ -4,7 +4,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import javax.inject.{Inject, Singleton}
-import play.api.{Logger, MarkerContext}
+import play.api.MarkerContext
+import util.Logging
 
 import scala.concurrent.Future
 
@@ -17,16 +18,14 @@ import scala.concurrent.Future
   */
 @Singleton
 class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext)
-  extends TripRepository {
-
-  private val logger = Logger(this.getClass)
+  extends TripRepository with Logging {
 
   override val dateFormat: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
   override def avgSpeed(date: LocalDate)(
     implicit mc: MarkerContext): Future[Option[AverageSpeed]] = {
     Future {
-      logger.trace(s"avgSpeed: date=$date")
+      log.trace(s"avgSpeed: date=$date")
       val ds: String = date.format(dateFormat)
       val result: Seq[AverageSpeed] = Seq(
         AverageSpeed("2019-04-01", 1.1F),
@@ -42,7 +41,7 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
   override def avgFareByPickupLocation(date: LocalDate)
                                       (implicit mc: MarkerContext): Future[Seq[AverageFareByPickupLocation]] = {
     Future {
-      logger.trace(s"avgFareByPickupLocation: date=$date")
+      log.trace(s"avgFareByPickupLocation: date=$date")
       val ds: String = date.format(dateFormat)
       val result: Seq[AverageFareByPickupLocation] = Seq(
         AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 1.11F),
@@ -58,7 +57,7 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
   override def tripCount(from: LocalDate, to: LocalDate)
                         (implicit mc: MarkerContext): Future[Seq[TripCount]] = {
     Future {
-      logger.trace(s"tripCount: from=$from, to=$to")
+      log.trace(s"tripCount: from=$from, to=$to")
       val froms: String = from.format(dateFormat)
       val tos: String = to.format(dateFormat)
       val result: Seq[TripCount] = Seq(

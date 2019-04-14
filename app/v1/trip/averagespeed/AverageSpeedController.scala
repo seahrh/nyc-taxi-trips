@@ -1,10 +1,10 @@
 package v1.trip.averagespeed
 
 import javax.inject.Inject
-import play.api.Logger
 import play.api.http.FileMimeTypes
 import play.api.i18n.{Langs, MessagesApi}
 import play.api.mvc._
+import util.Logging
 import v1.{RequestMarkerContext, V1ActionBuilder, failurePayload, successPayload}
 
 import scala.concurrent.ExecutionContext
@@ -33,9 +33,8 @@ private final case class AverageSpeedControllerComponents @Inject()(
 final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponents)(
   implicit ec: ExecutionContext)
   extends BaseController
+    with Logging
     with RequestMarkerContext {
-
-  private val logger = Logger(getClass)
 
   override protected def controllerComponents: ControllerComponents = cc
 
@@ -49,7 +48,7 @@ final class AverageSpeedController @Inject()(cc: AverageSpeedControllerComponent
       case _ =>
         action.async {
           implicit request =>
-            logger.trace(s"show: date = $date")
+            log.trace(s"show: date = $date")
             resourceHandler.lookup(date).map {
               case Some(data) => Ok(successPayload[Resource](Seq(data)))
               case _ =>

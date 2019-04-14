@@ -1,10 +1,10 @@
 package v1.trip.tripcount
 
 import javax.inject.Inject
-import play.api.Logger
 import play.api.http.FileMimeTypes
 import play.api.i18n.{Langs, MessagesApi}
 import play.api.mvc._
+import util.Logging
 import v1.{RequestMarkerContext, V1ActionBuilder, failurePayload, successPayload}
 
 import scala.concurrent.ExecutionContext
@@ -16,14 +16,14 @@ import scala.concurrent.ExecutionContext
   * controller only has to have one thing injected.
   */
 private final case class TripCountControllerComponents @Inject()(
-                                                                     action: V1ActionBuilder,
-                                                                     resourceHandler: ResourceHandler,
-                                                                     actionBuilder: DefaultActionBuilder,
-                                                                     parsers: PlayBodyParsers,
-                                                                     messagesApi: MessagesApi,
-                                                                     langs: Langs,
-                                                                     fileMimeTypes: FileMimeTypes,
-                                                                     executionContext: scala.concurrent.ExecutionContext)
+                                                                  action: V1ActionBuilder,
+                                                                  resourceHandler: ResourceHandler,
+                                                                  actionBuilder: DefaultActionBuilder,
+                                                                  parsers: PlayBodyParsers,
+                                                                  messagesApi: MessagesApi,
+                                                                  langs: Langs,
+                                                                  fileMimeTypes: FileMimeTypes,
+                                                                  executionContext: scala.concurrent.ExecutionContext)
   extends ControllerComponents
 
 
@@ -33,9 +33,8 @@ private final case class TripCountControllerComponents @Inject()(
 final class TripCountController @Inject()(cc: TripCountControllerComponents)(
   implicit ec: ExecutionContext)
   extends BaseController
+    with Logging
     with RequestMarkerContext {
-
-  private val logger = Logger(getClass)
 
   override protected def controllerComponents: ControllerComponents = cc
 
@@ -49,7 +48,7 @@ final class TripCountController @Inject()(cc: TripCountControllerComponents)(
       case _ =>
         action.async {
           implicit request =>
-            logger.trace(s"show: start=$start, end=$end")
+            log.trace(s"show: start=$start, end=$end")
             for (data <- resourceHandler.lookup(start, end)) yield {
               if (data.isEmpty) {
                 NotFound(failurePayload(s"Total trips not found for date range: $start to $end"))

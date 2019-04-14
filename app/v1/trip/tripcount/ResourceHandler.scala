@@ -6,7 +6,7 @@ import bigquery.{BigQueryRepository, TripCount}
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
-import validation.{DateValidator, ValidationError}
+import validation.{DateRangeValidator, ValidationError}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,8 +44,8 @@ private[tripcount] class ResourceHandler @Inject()(
     )
   }
 
-  private[tripcount] def validate(date: String): Option[String] = {
-    val errors: Set[ValidationError] = DateValidator(date, repo.dateFormat).validate
+  private[tripcount] def validate(startDate: String, endDate: String): Option[String] = {
+    val errors: Set[ValidationError] = DateRangeValidator(startDate, endDate, repo.dateFormat).validate
     if (errors.isEmpty) {
       None
     } else {

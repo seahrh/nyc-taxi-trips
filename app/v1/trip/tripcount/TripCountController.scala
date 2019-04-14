@@ -44,7 +44,7 @@ final class TripCountController @Inject()(cc: TripCountControllerComponents)(
   private def resourceHandler: ResourceHandler = cc.resourceHandler
 
   def show(start: String, end: String): Action[AnyContent] = {
-    resourceHandler.validate(start) match {
+    resourceHandler.validate(start, end) match {
       case Some(err) => Action(BadRequest(failurePayload(err)))
       case _ =>
         action.async {

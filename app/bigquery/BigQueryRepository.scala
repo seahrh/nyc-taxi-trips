@@ -81,6 +81,8 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
                         (implicit mc: MarkerContext): Future[Seq[TripCount]] = {
     Future {
       logger.trace(s"tripCount: from=$from, to=$to")
+      val froms: String = from.format(dateFormat)
+      val tos: String = to.format(dateFormat)
       val result: Seq[TripCount] = Seq(
         TripCount("2019-04-01", 111), //scalastyle:ignore
         TripCount("2019-04-02", 222), //scalastyle:ignore
@@ -88,7 +90,7 @@ final class BigQueryRepositoryImpl @Inject()()(implicit ec: RepositoryExecutionC
         TripCount("2019-04-04", 444), //scalastyle:ignore
         TripCount("2019-04-05", 555) //scalastyle:ignore
       )
-      result
+      result.filter(x => x.date >= froms && x.date <= tos)
     }
   }
 }

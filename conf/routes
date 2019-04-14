@@ -1,3 +1,5 @@
+GET /total_trips                        v1.trip.tripcount.TripCountController.show(start, end)
+
 GET /average_fare_heatmap               v1.trip.averagefareheatmap.AverageFareHeatmapController.show(date)
 
 GET /average_speed_24hrs                v1.trip.averagespeed.AverageSpeedController.show(date)

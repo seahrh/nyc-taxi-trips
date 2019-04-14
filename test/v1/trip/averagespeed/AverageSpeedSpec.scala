@@ -7,11 +7,11 @@ import play.api.test.Helpers._
 import play.api.test._
 import v1._
 
-class TripAverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
+class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit lazy val materializer: Materializer = app.materializer
 
-  "Trip Average Speed" should {
+  "Average Speed" should {
 
     "return 200 OK and resource when resource exists" in {
       val request = FakeRequest(GET, "/average_speed_24hrs?date=2019-04-01")

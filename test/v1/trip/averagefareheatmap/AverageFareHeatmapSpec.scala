@@ -32,7 +32,7 @@ class AverageFareHeatmapSpec extends PlaySpec with GuiceOneAppPerSuite {
       for (res <- route(app, request)) {
         status(res) mustEqual NOT_FOUND
         val payload: FailurePayload = contentAsJson(res).as[FailurePayload]
-        payload.error.message must startWith("Average speed not found")
+        payload.error.message must startWith("Average fare not found")
       }
     }
 

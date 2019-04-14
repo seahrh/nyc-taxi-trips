@@ -52,7 +52,7 @@ final class AverageFareHeatmapController @Inject()(cc: AverageFareHeatmapControl
             logger.trace(s"show: date = $date")
             for (data <- resourceHandler.lookup(date)) yield {
               if (data.isEmpty) {
-                NotFound(failurePayload(s"Average speed not found for date: $date"))
+                NotFound(failurePayload(s"Average fare not found for date: $date"))
               } else {
                 Ok(successPayload[Resource](data))
               }

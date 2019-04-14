@@ -25,6 +25,7 @@ lazy val root = (project in file("."))
       "net.logstash.logback" % "logstash-logback-encoder" % "5.3",
       "com.netaporter" %% "scala-uri" % "0.4.16",
       "net.codingwell" %% "scala-guice" % "4.2.3",
+      "io.sgr" % "s2-geometry-library-java" % "1.0.0",
       "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
       "io.gatling.highcharts" % "gatling-charts-highcharts" % versions.gatling % Test,
       "io.gatling" % "gatling-test-framework" % versions.gatling % Test

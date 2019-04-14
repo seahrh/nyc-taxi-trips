@@ -14,7 +14,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * DTO for displaying post information.
   */
-private[averagefareheatmap] final case class Resource(s2id: String, fare: Float)
+private[averagefareheatmap] final case class Resource(s2id: String, fare: BigDecimal)
 
 private[averagefareheatmap] object Resource {
   implicit val jsonFormat: Format[Resource] = Json.format[Resource]

@@ -29,12 +29,12 @@ package object v1 {
     Json.toJson(FailurePayload(error = Error(message)))
   }
 
-  private[v1] def roundUp(d: Double, decimalPlaces: Int): Double = {
-    BigDecimal(d).setScale(decimalPlaces, BigDecimal.RoundingMode.HALF_UP).toDouble
+  private[v1] def roundUp(d: Double, decimalPlaces: Int): BigDecimal = {
+    BigDecimal(d).setScale(decimalPlaces, BigDecimal.RoundingMode.HALF_UP)
   }
 
-  private[v1] def roundUp(f: Float, decimalPlaces: Int): Float = {
-    roundUp(f.toDouble, decimalPlaces).toFloat
+  private[v1] def roundUp(f: Float, decimalPlaces: Int): BigDecimal = {
+    roundUp(f.toDouble, decimalPlaces)
   }
 
 }

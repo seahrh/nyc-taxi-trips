@@ -14,7 +14,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * DTO for displaying post information.
   */
-private[averagespeed] final case class Resource(average_speed: Float)
+private[averagespeed] final case class Resource(average_speed: BigDecimal)
 
 private[averagespeed] object Resource {
   implicit val jsonFormat: Format[Resource] = Json.format[Resource]

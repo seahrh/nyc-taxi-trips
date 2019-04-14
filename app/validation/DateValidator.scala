@@ -33,7 +33,7 @@ final case class DateRangeValidator(
     errors ++= DateValidator(toDateString, formatter).validate
     if (errors.isEmpty) {
       val from: LocalDate = LocalDate.parse(fromDateString, formatter)
-      val to: LocalDate = LocalDate.parse(fromDateString, formatter)
+      val to: LocalDate = LocalDate.parse(toDateString, formatter)
       if (from.isAfter(to)) {
         errors += ValidationError(message = s"Invalid date range: from [$fromDateString], to [$toDateString]")
       }

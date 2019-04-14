@@ -45,7 +45,11 @@ private[tripcount] class ResourceHandler @Inject()(
   }
 
   private[tripcount] def validate(startDate: String, endDate: String): Option[String] = {
-    val errors: Set[ValidationError] = DateRangeValidator(startDate, endDate, repo.dateFormat).validate
+    val errors: Set[ValidationError] = DateRangeValidator(
+      fromDateString = startDate,
+      toDateString = endDate,
+      formatter = repo.dateFormat
+    ).validate
     if (errors.isEmpty) {
       None
     } else {

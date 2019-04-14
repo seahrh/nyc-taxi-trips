@@ -11,10 +11,12 @@ class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit lazy val materializer: Materializer = app.materializer
 
+  private val baseUrl: String = "/average_speed_24hrs"
+
   "Average Speed" should {
 
     "return 200 OK and resource when resource exists" in {
-      val request = FakeRequest(GET, "/average_speed_24hrs?date=2019-04-01")
+      val request = FakeRequest(GET, s"$baseUrl?date=2019-04-01")
         .withHeaders(HOST -> "localhost:8080")
       for (res <- route(app, request)) {
         status(res) mustEqual OK
@@ -25,7 +27,7 @@ class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "return 404 Not Found and details when resource does not exist" in {
-      val request = FakeRequest(GET, "/average_speed_24hrs?date=2019-04-06")
+      val request = FakeRequest(GET, s"$baseUrl?date=2019-04-06")
         .withHeaders(HOST -> "localhost:8080")
       for (res <- route(app, request)) {
         status(res) mustEqual NOT_FOUND
@@ -35,7 +37,7 @@ class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "return 400 Bad Request and details when input value is invalid" in {
-      val request = FakeRequest(GET, "/average_speed_24hrs?date=2019-02-31")
+      val request = FakeRequest(GET, s"$baseUrl?date=2019-02-31")
         .withHeaders(HOST -> "localhost:8080")
       for (res <- route(app, request)) {
         status(res) mustEqual BAD_REQUEST
@@ -45,7 +47,7 @@ class AverageSpeedSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "return 400 Bad Request and details when input key is invalid" in {
-      val request = FakeRequest(GET, "/average_speed_24hrs?name=2019-02-01")
+      val request = FakeRequest(GET, s"$baseUrl?name=2019-02-01")
         .withHeaders(HOST -> "localhost:8080")
       for (res <- route(app, request)) {
         status(res) mustEqual BAD_REQUEST

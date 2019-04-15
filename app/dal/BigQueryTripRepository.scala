@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 import com.google.cloud.bigquery.{BigQuery, BigQueryOptions, FieldValueList, QueryJobConfiguration, TableResult}
 import javax.inject.{Inject, Singleton}
-import play.api.MarkerContext
+import play.api.{Configuration, MarkerContext}
 import util.Logging
 
 import scala.collection.JavaConverters._
@@ -20,16 +20,17 @@ import scala.concurrent.Future
   * such as rendering.
   */
 @Singleton
-class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext)
+class BigQueryTripRepository @Inject()(conf: Configuration)
+                                      (implicit ec: RepositoryExecutionContext)
   extends TripRepository with Logging {
 
   override val dateFormat: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
   private val bigquery: BigQuery = BigQueryOptions.getDefaultInstance.getService
 
-  private val PROJECT: String = "nyc-taxi-trips-236902"
+  private val PROJECT: String = conf.get[String]("dal.BigQueryTripRepository.PROJECT")
 
-  private val DATASET: String = "new_york_taxi_trips"
+  private val DATASET: String = conf.get[String]("dal.BigQueryTripRepository.DATASET")
 
   override def avgSpeed(date: LocalDate)
                        (implicit mc: MarkerContext): Future[Option[AverageSpeed]] = Future {

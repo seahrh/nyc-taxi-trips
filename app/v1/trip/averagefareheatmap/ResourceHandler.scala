@@ -5,7 +5,7 @@ import java.time.LocalDate
 import dal.TripRepository
 import geom.s2id
 import javax.inject.Inject
-import play.api.MarkerContext
+import play.api.{Configuration, MarkerContext}
 import play.api.libs.json._
 import v1.roundUp
 import validation.{DateValidator, ValidationError}
@@ -26,10 +26,13 @@ private[averagefareheatmap] object Resource {
   * Controls access to the backend data, returning [[Resource]]
   */
 private[averagefareheatmap] class ResourceHandler @Inject()(
-                                                       repo: TripRepository
+                                                       repo: TripRepository,
+                                                       conf: Configuration
                                                      )(implicit ec: ExecutionContext) {
 
-  private val S2_CELL_LEVEL: Int = 16
+  private val S2_CELL_LEVEL: Int = conf.get[Int]("v1.trip.averagefareheatmap.ResourceHandler.S2_CELL_LEVEL")
+
+  private val DECIMAL_PLACES: Int = conf.get[Int]("v1.trip.averagefareheatmap.ResourceHandler.DECIMAL_PLACES")
 
   private[averagefareheatmap] def lookup(date: String)
                                   (implicit mc: MarkerContext): Future[Seq[Resource]] = {
@@ -46,7 +49,7 @@ private[averagefareheatmap] class ResourceHandler @Inject()(
       for ((s2id, fare) <- res.toSeq) yield {
         Resource(
           s2id = s2id,
-          fare = roundUp(fare, decimalPlaces = 2)
+          fare = roundUp(fare, decimalPlaces = DECIMAL_PLACES)
         )
       }
     }

@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 import dal.{AverageSpeed, TripRepository}
 import javax.inject.Inject
-import play.api.MarkerContext
+import play.api.{Configuration, MarkerContext}
 import play.api.libs.json._
 import v1.roundUp
 import validation.{DateValidator, ValidationError}
@@ -24,10 +24,11 @@ private[averagespeed] object Resource {
   * Controls access to the backend data, returning [[Resource]]
   */
 private[averagespeed] class ResourceHandler @Inject()(
-                                                       repo: TripRepository
+                                                       repo: TripRepository,
+                                                       conf: Configuration
                                                      )(implicit ec: ExecutionContext) {
 
-
+  private val DECIMAL_PLACES: Int = conf.get[Int]("v1.trip.averagespeed.ResourceHandler.DECIMAL_PLACES")
 
   private[averagespeed] def lookup(date: String)
                                   (implicit mc: MarkerContext): Future[Option[Resource]] = {
@@ -39,7 +40,7 @@ private[averagespeed] class ResourceHandler @Inject()(
   }
 
   private def asResource(data: AverageSpeed): Resource = {
-    Resource(roundUp(data.speed, decimalPlaces = 1))
+    Resource(roundUp(data.speed, decimalPlaces = DECIMAL_PLACES))
   }
 
   private[averagespeed] def validate(date: String): Option[String] = {

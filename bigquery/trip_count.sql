@@ -1,3 +1,4 @@
+#standardSQL
 SELECT
   d `date`,
   n `count`

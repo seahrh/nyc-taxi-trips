@@ -66,7 +66,7 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
          |FROM `$PROJECT.$DATASET.average_fare_by_pickup_location`
          |WHERE `_date`=PARSE_DATE("%F","$partitionDate")
          |AND `date`="$ds"
-         |AND `fare`!=0
+         |AND `fare`>=1
        """.stripMargin
     val config: QueryJobConfiguration = QueryJobConfiguration.newBuilder(sql)
       .setUseLegacySql(false)

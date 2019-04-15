@@ -22,11 +22,11 @@ class AverageFareHeatmapSpec extends PlaySpec with MockitoSugar {
   private val baseUrl: String = "/average_fare_heatmap"
 
   private val result: Seq[AverageFareByPickupLocation] = Seq(
-    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 1.11F),
-    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 2.22F),
-    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 3.33F),
-    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 4.44F),
-    AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 5.55F)
+    AverageFareByPickupLocation(1.276162F, 103.847333F, 1.11F),
+    AverageFareByPickupLocation(1.276162F, 103.847333F, 2.22F),
+    AverageFareByPickupLocation(1.276162F, 103.847333F, 3.33F),
+    AverageFareByPickupLocation(1.276162F, 103.847333F, 4.44F),
+    AverageFareByPickupLocation(1.276162F, 103.847333F, 5.55F)
   )
 
   private val repo = mock[BigQueryTripRepository]

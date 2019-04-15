@@ -55,19 +55,32 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
   }
 
   override def avgFareByPickupLocation(date: LocalDate)
-                                      (implicit mc: MarkerContext): Future[Seq[AverageFareByPickupLocation]] = {
-    Future {
-      log.trace(s"avgFareByPickupLocation: date=$date")
-      val ds: String = date.format(dateFormat)
-      val result: Seq[AverageFareByPickupLocation] = Seq(
-        AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 1.11F),
-        AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 2.22F),
-        AverageFareByPickupLocation("2019-04-01", 1.276162F, 103.847333F, 3.33F),
-        AverageFareByPickupLocation("2019-04-02", 1.276162F, 103.847333F, 4.44F),
-        AverageFareByPickupLocation("2019-04-02", 1.276162F, 103.847333F, 5.55F)
+                                      (implicit mc: MarkerContext):
+  Future[Seq[AverageFareByPickupLocation]] = Future {
+    log.trace(s"avgFareByPickupLocation: date=$date")
+    val ds: String = date.format(dateFormat)
+    val partitionDate: String = "2019-04-01"
+    val sql: String =
+      s"""
+         |SELECT `lat`,`lng`,`fare`
+         |FROM `$PROJECT.$DATASET.average_fare_by_pickup_location`
+         |WHERE `_date`=PARSE_DATE("%F","$partitionDate")
+         |AND `date`="$ds"
+         |AND `fare`!=0
+       """.stripMargin
+    val config: QueryJobConfiguration = QueryJobConfiguration.newBuilder(sql)
+      .setUseLegacySql(false)
+      .build
+    val result: TableResult = bigquery.query(config)
+    val arr: ArrayBuffer[AverageFareByPickupLocation] = ArrayBuffer()
+    for (row: FieldValueList <- result.iterateAll().asScala) {
+      arr += AverageFareByPickupLocation(
+        lat = row.get("lat").getDoubleValue.toFloat,
+        lng = row.get("lng").getDoubleValue.toFloat,
+        fare = row.get("fare").getDoubleValue.toFloat
       )
-      result.filter(x => x.date == ds)
     }
+    arr
   }
 
   override def tripCount(from: LocalDate, to: LocalDate)

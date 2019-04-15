@@ -2,15 +2,16 @@ package v1.trip.averagefareheatmap
 
 import java.time.LocalDate
 
-import dal.{AverageFareByPickupLocation, TripRepository}
+import dal.TripRepository
+import geom.s2id
 import javax.inject.Inject
 import play.api.MarkerContext
 import play.api.libs.json._
 import v1.roundUp
 import validation.{DateValidator, ValidationError}
 
+import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
-import geom.s2id
 
 /**
   * DTO for displaying post information.
@@ -34,15 +35,25 @@ private[averagefareheatmap] class ResourceHandler @Inject()(
                                   (implicit mc: MarkerContext): Future[Seq[Resource]] = {
     val d: LocalDate = LocalDate.parse(date, repo.dateFormat)
     for (data <- repo.avgFareByPickupLocation(d)) yield {
-      data.map { x => asResource(x) }
+      val res: mutable.Map[String, Float] = mutable.Map()
+      for (d <- data) {
+        val k: String = s2id(latitude = d.lat, longitude = d.lng, level = S2_CELL_LEVEL)
+        res.get(k) match {
+          case Some(fare) => res += k -> avg(fare, d.fare)
+          case _ => res += k -> d.fare
+        }
+      }
+      for ((s2id, fare) <- res.toSeq) yield {
+        Resource(
+          s2id = s2id,
+          fare = roundUp(fare, decimalPlaces = 2)
+        )
+      }
     }
   }
 
-  private def asResource(data: AverageFareByPickupLocation): Resource = {
-    Resource(
-      s2id = s2id(latitude = data.lat, longitude = data.lng, level = S2_CELL_LEVEL),
-      fare = roundUp(data.fare, decimalPlaces = 2)
-    )
+  private def avg(v1: Float, v2: Float): Float = {
+    (v1 / 2) + (v2 / 2)
   }
 
   private[averagefareheatmap] def validate(date: String): Option[String] = {

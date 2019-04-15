@@ -26,6 +26,7 @@ lazy val root = (project in file("."))
       "com.netaporter" %% "scala-uri" % "0.4.16",
       "net.codingwell" %% "scala-guice" % "4.2.3",
       "io.sgr" % "s2-geometry-library-java" % "1.0.0",
+      "com.google.cloud" % "google-cloud-bigquery" % "1.69.0",
       "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
       "io.gatling.highcharts" % "gatling-charts-highcharts" % versions.gatling % Test,
       "io.gatling" % "gatling-test-framework" % versions.gatling % Test,

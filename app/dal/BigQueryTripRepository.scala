@@ -3,10 +3,13 @@ package dal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+import com.google.cloud.bigquery.{BigQuery, BigQueryOptions, FieldValueList, QueryJobConfiguration, TableResult}
 import javax.inject.{Inject, Singleton}
 import play.api.MarkerContext
 import util.Logging
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 
 /**
@@ -21,6 +24,12 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
   extends TripRepository with Logging {
 
   override val dateFormat: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+  private val bigquery: BigQuery = BigQueryOptions.getDefaultInstance.getService
+
+  private val PROJECT: String = "nyc-taxi-trips-236902"
+
+  private val DATASET: String = "new_york_taxi_trips"
 
   override def avgSpeed(date: LocalDate)(
     implicit mc: MarkerContext): Future[Option[AverageSpeed]] = {
@@ -55,19 +64,27 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
   }
 
   override def tripCount(from: LocalDate, to: LocalDate)
-                        (implicit mc: MarkerContext): Future[Seq[TripCount]] = {
-    Future {
-      log.trace(s"tripCount: from=$from, to=$to")
-      val froms: String = from.format(dateFormat)
-      val tos: String = to.format(dateFormat)
-      val result: Seq[TripCount] = Seq(
-        TripCount("2019-04-01", 111), //scalastyle:ignore
-        TripCount("2019-04-02", 222), //scalastyle:ignore
-        TripCount("2019-04-03", 333), //scalastyle:ignore
-        TripCount("2019-04-04", 444), //scalastyle:ignore
-        TripCount("2019-04-05", 555) //scalastyle:ignore
+                        (implicit mc: MarkerContext): Future[Seq[TripCount]] = Future {
+    log.trace(s"tripCount: from=$from, to=$to")
+    val froms: String = from.format(dateFormat)
+    val tos: String = to.format(dateFormat)
+    val sql: String =
+      s"""
+         |SELECT `date`,`count`
+         |FROM `$PROJECT.$DATASET.trip_count`
+         |WHERE `date` between "$froms" and "$tos"
+       """.stripMargin
+    val config: QueryJobConfiguration = QueryJobConfiguration.newBuilder(sql)
+      .setUseLegacySql(false)
+      .build
+    val result: TableResult = bigquery.query(config)
+    val arr: ArrayBuffer[TripCount] = ArrayBuffer()
+    for (row: FieldValueList <- result.iterateAll().asScala) {
+      arr += TripCount(
+        date = row.get("date").getStringValue,
+        count = row.get("count").getLongValue
       )
-      result.filter(x => x.date >= froms && x.date <= tos)
     }
+    arr
   }
 }

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "nyc-taxi-trips-236902",
+  "private_key_id": "fd59948fb44dc956550b94098953576bd6aca77c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxfGdl0ZlrQHPf\nYrkgIH8rQyE+LlpVUayiffwQyHWLLeIfU12+NMDq1Ruqwfiy5l5QgTUVe39LRALe\nlmxAnuwf0oYqNsqhxF2s94rIscBgCf2XiEfxwDR53LtAzGKtRRair3wXD+0yKnMY\nW4TcnDjnWKFWWe+ueveRDLMRdVjIymP/XlVnIxdgXpw/i/vftFFvj47votSnISOe\nW7GVclF6J6CoEiUeXTCX+zQ6PTT2DsUDo+rvg1EUtYnYsEFzOCL9S04gbZyzixrd\nTs8TQKiu1IoqZOXYe6HBUNOSXnCHje543lRYJemZGBHXYeWSs6jIOVerbX85nD2G\nYDfNxzgpAgMBAAECggEAEnzFXm87Plc72qBzbRvFc1GuREZaxXlY9KIP4AWpbMJu\nQ9oQsS/Yin2BQMOsrqHdYCBdUawIAeSHMf1UMFT9foEU1Y/YgoosQciVLbuKMNbJ\nkf+xksZ1EN6DqMfBXZANQAvsbpCLogaW74oU6E/jg4GRaKe8lh2b7QF4I5DoGx4B\nZkjxLrTsO3vKy8NbfJpPtK3L+olKSiMkCE7p5iicUfFqalRmjETSBC2z3aFBrTWp\ncnRf8VR17nmpOO/bDMBPGNm+Z0bMMkyEF4ZyZVEjDW0OiPfN+XAx3d2I3FfANCx2\nCI6MVz0NMhWpRXlDEZBuIw40vlhhm3yt6L4Bu/8YAQKBgQDc0bGFiD7P7h1jzyV8\nMYe1uoeLNI9rYvBla1y9TfV2NgdrzsLT3jTgCOidwYfueaNo52I4rZQZ6udmq4i0\nIgL6T0V+S9FIJJHxCPacQor5S8CnUIUTfepeJOeo5cDo6DhQ0iI6XATvF9bjpYJZ\n5Go9V6n/fT+rjCZ9QYXVpKmyKQKBgQDNw1QROqvXrafBmLoUNEj8H1PasTjExXVr\nZir9w6cjvBBK6LEuPLZbgloBsWLbB0XHK860H/shhxXU7VM0HgYx17+ZwOCtPpnS\nSDPAJXXmpGs++JzA41Ox5h9gCu0MeOPK86VmBqbgxi/JEYvSwGZYFvnkYCm9tPyl\nTwmnex4WAQKBgC+Kviu/v7ZIz+8TREDO8ScBN/mSoWY/cP6E9PyU8ko3K7XcWDoB\nV2T8xghhCIEhkzscxhrp1D8YQiXqvI373KRDuPSOIkrkBL/ebCoMcZtm4d2kCmK9\n8129mFrWzIfYp3dPJqtl8HIBsfRlSAFOmkkGvMUTFEg87nR9TPFIeHixAoGAKqVU\nNCnz2cS9IyvTTUK06cRYbdgTSv0d4/+N44B8kLR2r//gURP2O6sdmoI4Wer89FXJ\nBp4mP4Gu7a2uc/vRDt2HcYd/SYjS+rlKOIXLFN14+NkwK+4xt4pZcF9zWAVqOPMc\nkbPJPIb2+nZvg2OrEpDYhBPGMvJi9qQV/SdQSgECgYEAvOB4bfTrqdOPrBCQWkMs\n8LQaThMD968ZXBXhacnF562Fov3IVtgaMs0mvLPMed0/T9KNS/GbJVEl8nNJUUS3\nk/qs3MX+ZwjhaNhZlu+pheQGCfr2hctaa0zlCTcgaxeCAfZ+a8io8CWKqSP9ISuA\ncu4vqHwqEqfsx9Es7zTxJ+g=\n-----END PRIVATE KEY-----\n",
+  "client_email": "owner-175@nyc-taxi-trips-236902.iam.gserviceaccount.com",
+  "client_id": "114172230321462049333",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/owner-175%40nyc-taxi-trips-236902.iam.gserviceaccount.com"
+}

@@ -1,7 +1,6 @@
-#standardSQL
 SELECT
   d `date`,
-  n `count`
+  SUM(n) `count`
 FROM (
   SELECT
     FORMAT_DATETIME("%F",
@@ -86,5 +85,7 @@ FROM (
     pickup_datetime IS NOT NULL
   GROUP BY
     1 ) t1
+GROUP BY
+  1
 ORDER BY
   1;

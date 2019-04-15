@@ -39,7 +39,7 @@ private[averagespeed] class ResourceHandler @Inject()(
   }
 
   private def asResource(data: AverageSpeed): Resource = {
-    Resource(roundUp(data.averageSpeed, decimalPlaces = 1))
+    Resource(roundUp(data.speed, decimalPlaces = 1))
   }
 
   private[averagespeed] def validate(date: String): Option[String] = {

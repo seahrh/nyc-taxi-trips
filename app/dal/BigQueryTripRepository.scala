@@ -31,19 +31,26 @@ class BigQueryTripRepository @Inject()()(implicit ec: RepositoryExecutionContext
 
   private val DATASET: String = "new_york_taxi_trips"
 
-  override def avgSpeed(date: LocalDate)(
-    implicit mc: MarkerContext): Future[Option[AverageSpeed]] = {
-    Future {
-      log.trace(s"avgSpeed: date=$date")
-      val ds: String = date.format(dateFormat)
-      val result: Seq[AverageSpeed] = Seq(
-        AverageSpeed("2019-04-01", 1.1F),
-        AverageSpeed("2019-04-02", 2.2F),
-        AverageSpeed("2019-04-03", 3.3F),
-        AverageSpeed("2019-04-04", 4.4F),
-        AverageSpeed("2019-04-05", 5.5F)
-      )
-      result.find(x => x.date == ds)
+  override def avgSpeed(date: LocalDate)
+                       (implicit mc: MarkerContext): Future[Option[AverageSpeed]] = Future {
+    log.trace(s"avgSpeed: date=$date")
+    val ds: String = date.format(dateFormat)
+    val sql: String =
+      s"""
+         |SELECT `date`,`speed`
+         |FROM `$PROJECT.$DATASET.average_speed`
+         |WHERE `date`="$ds"
+       """.stripMargin
+    val config: QueryJobConfiguration = QueryJobConfiguration.newBuilder(sql)
+      .setUseLegacySql(false)
+      .build
+    bigquery.query(config).iterateAll().asScala.headOption match {
+      case Some(row) =>
+        Option(AverageSpeed(
+          date = row.get("date").getStringValue,
+          speed = row.get("speed").getDoubleValue.toFloat
+        ))
+      case _ => None
     }
   }
 

@@ -7,7 +7,7 @@ import play.api.MarkerContext
 
 import scala.concurrent.Future
 
-final case class AverageSpeed(date: String, averageSpeed: Float)
+final case class AverageSpeed(date: String, speed: Float)
 
 final case class AverageFareByPickupLocation(date: String, lat: Float, lng: Float, fare: Float)
 

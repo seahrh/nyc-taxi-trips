@@ -1,15 +1,15 @@
 #standardSQL
 SELECT
   d `date`,
-  s `speed`
+  AVG(s) `speed`
 FROM (
   SELECT
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_green_trips_2014`
   WHERE
@@ -23,9 +23,9 @@ FROM (
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_green_trips_2015`
   WHERE
@@ -39,9 +39,9 @@ FROM (
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_green_trips_2016`
   WHERE
@@ -55,9 +55,9 @@ FROM (
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_green_trips_2017`
   WHERE
@@ -71,9 +71,9 @@ FROM (
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_yellow_trips_2015`
   WHERE
@@ -87,9 +87,9 @@ FROM (
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_yellow_trips_2016`
   WHERE
@@ -103,9 +103,9 @@ FROM (
     FORMAT_DATETIME("%F",
       DATETIME_TRUNC(dropoff_datetime,
         DAY)) d,
-    ROUND(AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
-          pickup_datetime,
-          SECOND))*3600, 1) s
+    AVG(trip_distance / DATETIME_DIFF(dropoff_datetime,
+        pickup_datetime,
+        SECOND))*3600 s
   FROM
     `bigquery-public-data.new_york_taxi_trips.tlc_yellow_trips_2017`
   WHERE
@@ -114,5 +114,7 @@ FROM (
     AND dropoff_datetime > pickup_datetime
   GROUP BY
     1 ) t1
+GROUP BY
+  1
 ORDER BY
   1;

@@ -72,6 +72,14 @@ Content-Length: 33
 {"data":[{"average_speed":14.3}]}
 ```
 Implementation in [averagespeed](app/v1/trip/averagespeed) package.
+### HTTP status codes
+The API may serve the following http status codes:
+- 200 OK
+- 400 Bad Request
+- 404 Not Found
+- 500 Internal error
+
+Same as per REST API providers like [Twitter](https://developer.twitter.com/en/docs/ads/general/guides/response-codes) and [Twilio](https://www.twilio.com/docs/verify/return-and-error-codes). 
 ## Deploy
 Publish a local Docker image with sbt and run the Play app
 ```

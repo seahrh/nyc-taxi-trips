@@ -1,9 +1,10 @@
 package v1.trip.averagespeed
 
+import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import dal.{AverageSpeed, TripRepository, BigQueryTripRepository}
+import dal.{AverageSpeed, BigQueryTripRepository, TripRepository}
 import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers._
 import org.scalatest.mockito.MockitoSugar
@@ -11,6 +12,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.MarkerContext
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import v1._
@@ -20,17 +22,26 @@ import scala.concurrent.Future
 class AverageSpeedSpec extends PlaySpec with MockitoSugar {
   private val baseUrl: String = "/average_speed_24hrs"
 
+  private val data: Option[AverageSpeed] = {
+    val stream = new FileInputStream("test/resources/average_speed.json")
+    val json: JsValue = try {
+      Json.parse(stream)
+    } finally {
+      stream.close()
+    }
+    json.as[Seq[AverageSpeed]].headOption
+  }
+
   private val repo = mock[BigQueryTripRepository]
-  when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
-  when(repo.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(
-    Option(AverageSpeed("2019-04-01", 1.1F)))
+  when(repo.dateFormat) thenReturn DateTimeFormatter.ISO_LOCAL_DATE
+  when(repo.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(data)
 
   private val app = new GuiceApplicationBuilder()
     .overrides(bind[TripRepository].toInstance(repo))
     .build
 
   private val repoNoData = mock[BigQueryTripRepository]
-  when(repoNoData.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE
+  when(repoNoData.dateFormat) thenReturn DateTimeFormatter.ISO_LOCAL_DATE
   when(repoNoData.avgSpeed(any[LocalDate])(any[MarkerContext])) thenReturn Future.successful(None)
 
   private val appNoData = new GuiceApplicationBuilder()

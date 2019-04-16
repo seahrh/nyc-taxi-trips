@@ -1,9 +1,10 @@
 package v1.trip.tripcount
 
+import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import dal.{TripRepository, BigQueryTripRepository, TripCount}
+import dal.{BigQueryTripRepository, TripCount, TripRepository}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -11,6 +12,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.MarkerContext
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import play.api.test._
 import v1._
@@ -21,13 +23,15 @@ class TripCountSpec extends PlaySpec with MockitoSugar {
 
   private val baseUrl: String = "/total_trips"
 
-  private val result: Seq[TripCount] = Seq(
-    TripCount("2019-04-01", 111), //scalastyle:ignore
-    TripCount("2019-04-02", 222), //scalastyle:ignore
-    TripCount("2019-04-03", 333), //scalastyle:ignore
-    TripCount("2019-04-04", 444), //scalastyle:ignore
-    TripCount("2019-04-05", 555) //scalastyle:ignore
-  )
+  private val result: Seq[TripCount] = {
+    val stream = new FileInputStream("test/resources/trip_count.json")
+    val json: JsValue = try {
+      Json.parse(stream)
+    } finally {
+      stream.close()
+    }
+    json.as[Seq[TripCount]]
+  }
 
   private val repo = mock[BigQueryTripRepository]
   when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE

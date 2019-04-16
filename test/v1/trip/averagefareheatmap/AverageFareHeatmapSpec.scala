@@ -1,9 +1,10 @@
 package v1.trip.averagefareheatmap
 
+import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import dal.{AverageFareByPickupLocation, TripRepository, BigQueryTripRepository}
+import dal.{AverageFareByPickupLocation, BigQueryTripRepository, TripRepository}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -11,6 +12,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.MarkerContext
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import play.api.test._
 import v1._
@@ -21,13 +23,15 @@ class AverageFareHeatmapSpec extends PlaySpec with MockitoSugar {
 
   private val baseUrl: String = "/average_fare_heatmap"
 
-  private val result: Seq[AverageFareByPickupLocation] = Seq(
-    AverageFareByPickupLocation(1.276162F, 103.847333F, 1.11F),
-    AverageFareByPickupLocation(1.276162F, 103.847333F, 2.22F),
-    AverageFareByPickupLocation(1.276162F, 103.847333F, 3.33F),
-    AverageFareByPickupLocation(1.276162F, 103.847333F, 4.44F),
-    AverageFareByPickupLocation(1.276162F, 103.847333F, 5.55F)
-  )
+  private val result: Seq[AverageFareByPickupLocation] = {
+    val stream = new FileInputStream("test/resources/average_fare_by_pickup_location.json")
+    val json: JsValue = try {
+      Json.parse(stream)
+    } finally {
+      stream.close()
+    }
+    json.as[Seq[AverageFareByPickupLocation]]
+  }
 
   private val repo = mock[BigQueryTripRepository]
   when(repo.dateFormat) thenReturn  DateTimeFormatter.ISO_LOCAL_DATE

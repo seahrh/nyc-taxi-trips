@@ -12,7 +12,7 @@ import validation.{DateValidator, ValidationError}
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * DTO for displaying post information.
+  * DTO for displaying resource information.
   */
 private[averagespeed] final case class Resource(average_speed: BigDecimal)
 
@@ -30,6 +30,13 @@ private[averagespeed] class ResourceHandler @Inject()(
 
   private val DECIMAL_PLACES: Int = conf.get[Int]("v1.trip.averagespeed.ResourceHandler.DECIMAL_PLACES")
 
+  /**
+    * Retrieves data from the repository and converts it to the Resource object.
+    *
+    * @param date date in YYYY-MM-DD format
+    * @param mc   MarkerContext
+    * @return Future containing the result
+    */
   private[averagespeed] def lookup(date: String)
                                   (implicit mc: MarkerContext): Future[Option[Resource]] = {
     val d: LocalDate = LocalDate.parse(date, repo.dateFormat)
@@ -43,6 +50,12 @@ private[averagespeed] class ResourceHandler @Inject()(
     Resource(roundUp(data.speed, decimalPlaces = DECIMAL_PLACES))
   }
 
+  /**
+    * Validates input date
+    *
+    * @param date parameter in resource URI
+    * @return error message, if any
+    */
   private[averagespeed] def validate(date: String): Option[String] = {
     val errors: Set[ValidationError] = DateValidator(date, repo.dateFormat).validate
     if (errors.isEmpty) {

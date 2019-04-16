@@ -5,7 +5,12 @@ import java.time.format.{DateTimeFormatter, DateTimeParseException}
 
 import scala.collection.mutable.ArrayBuffer
 
-
+/**
+  * Checks if a given string can be parsed to a date.
+  *
+  * @param dateString input string
+  * @param formatter  given date format
+  */
 final case class DateValidator(dateString: String, formatter: DateTimeFormatter) extends Validator {
 
   override def validate: Set[ValidationError] = {
@@ -21,6 +26,13 @@ final case class DateValidator(dateString: String, formatter: DateTimeFormatter)
 
 }
 
+/**
+  * Checks if a given pair of strings can be parsed to a valid date range.
+  *
+  * @param fromDateString first date in the range, inclusive
+  * @param toDateString   last date in the range, inclusive
+  * @param formatter      given date format
+  */
 final case class DateRangeValidator(
                                      fromDateString: String,
                                      toDateString: String,

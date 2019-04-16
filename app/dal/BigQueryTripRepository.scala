@@ -13,11 +13,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 
 /**
-  * A trivial implementation for the Post Repository.
-  *
-  * A custom execution context is used here to establish that blocking operations should be
-  * executed in a different thread than Play's ExecutionContext, which is used for CPU bound tasks
-  * such as rendering.
+  * A BigQuery implementation for the Trip Repository.
   */
 @Singleton
 class BigQueryTripRepository @Inject()(conf: Configuration)

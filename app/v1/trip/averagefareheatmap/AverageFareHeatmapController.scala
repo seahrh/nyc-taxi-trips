@@ -10,7 +10,7 @@ import v1.{RequestMarkerContext, V1ActionBuilder, failurePayload, successPayload
 import scala.concurrent.ExecutionContext
 
 /**
-  * Packages up the component dependencies for the post controller.
+  * Packages up the component dependencies for the controller.
   *
   * This is a good way to minimize the surface area exposed to the controller, so the
   * controller only has to have one thing injected.

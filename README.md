@@ -80,6 +80,12 @@ The API may serve the following http status codes:
 - 500 Internal error
 
 Same as per REST API providers like [Twitter](https://developer.twitter.com/en/docs/ads/general/guides/response-codes) and [Twilio](https://www.twilio.com/docs/verify/return-and-error-codes). 
+## Test
+Each endpoint spec is defined in its respective [test](test/v1/trip) package.
+
+The Play application is mocked to return specific data for different test cases.
+
+Test data is loaded from resource files in [test/resources](test/resources).
 ## Deploy
 Publish a local Docker image with sbt and run the Play app
 ```

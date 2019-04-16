@@ -1,4 +1,11 @@
 # nyc-taxi-trips
+REST API for the [New York City Taxi Trips](https://console.cloud.google.com/marketplace/details/city-of-new-york/nyc-tlc-trips) public dataset, implemented in Scala and Play Framework 2.7.
+## Requirements
+- Java 8
+- sbt
+- Docker
+## Endpoints
+
 ## Deploy
 Publish a local Docker image with sbt and run the Play app
 ```
@@ -23,9 +30,14 @@ The data store is BigQuery (run at my own expense). Reasons:
 1. The source data is in BigQuery
 1. API requirements are read-only.
 
-To load the tables that will be queried by the API, ETL is performed with the following scripts in [bigquery](bigquery) directory.
+As much as possible, the results required by the API should be pre-computed in the ETL stage.
 
-In particular, clustering is performed on the `average_fare_by_pickup_location` table to speed up queries that have equality filter on `date` column. Clustering is recommended for columns that have high cardinality (like dates). 
+To load the tables that will be queried by the API, ETL is performed with the scripts in [bigquery](bigquery) directory.
+
+### Clustering
+Clustering is performed on the `average_fare_by_pickup_location` table to speed up queries that have equality filter on `date` column.
+
+Clustering is recommended for columns that have high cardinality e.g. dates. Data points that share the same date will be hashed to the same bucket. 
 
 See [bigquery/average_fare_by_pickup_location.sql](bigquery/average_fare_by_pickup_location.sql) 
 

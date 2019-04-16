@@ -86,6 +86,11 @@ Each endpoint spec is defined in its respective [test](test/v1/trip) package.
 The Play application is mocked to return specific data for different test cases.
 
 Test data is loaded from resource files in [test/resources](test/resources).
+
+Run tests
+```
+nyc-taxi-trips$ sbt test
+```
 ## Deploy
 Publish a local Docker image with sbt and run the Play app
 ```

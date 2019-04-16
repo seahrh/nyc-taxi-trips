@@ -16,4 +16,9 @@ Best practice is not to keep any secrets in source control but to set them as en
 Routing is set in [conf/routes](conf/routes).
 
 Application config is set in [conf/application.conf](conf/application.conf). For easy tracking, I use the Java package naming convention to specify which class is using the value. This also avoids naming conflicts.
+## Helpers
+### Latitude-longitude coordinates to S2 cell
+Helper methods are defined in [app/geom](app/geom) package.
+### Input validation
+Helper methods are defined in [app/validation](app/validation) package.
 
